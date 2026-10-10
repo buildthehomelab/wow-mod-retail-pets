@@ -1,0 +1,7 @@
+*.o
+*.a
+*.so
+.vscode/
+.idea/
+__pycache__/
+*.pyc

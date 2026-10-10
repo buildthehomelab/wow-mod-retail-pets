@@ -1,0 +1,3 @@
+display	retail_display	variant	form	tier	model	name	textures	creature	spell	item	icon_fdid	icon	scale	price	vendor	summon_text
+97000	47634		pet	0	red_panda	Red Panda		9502000	90200	90200	838692	INV_Pet_RedPanda_Red	0.8	10000	2663	Right Click to summon and dismiss your red panda.
+97001	124531		pet	0	red_panda_backpacker	Red Panda Backpacker		9502001	90201	90201	6310498	INV_RedPandaPet_Orange	0.8	10000	2663	Right Click to call or say goodbye to your red panda backpacker.
