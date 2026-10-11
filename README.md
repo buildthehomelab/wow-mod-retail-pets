@@ -2,7 +2,8 @@
 
 Companion (non-combat) pets and mounts from later expansions for an
 [AzerothCore](https://www.azerothcore.org/) (WotLK 3.3.5a) server, with their retail models
-converted for the 3.3.5a client. So far they are all red pandas, sold by Narkk in Booty Bay.
+converted for the 3.3.5a client. So far they are all red pandas, sold by one of their own:
+**Nari Rustpaw**, a red panda breeder on the Booty Bay boardwalk.
 
 | Companions (1 gold each) | Looks like |
 |---|---|
@@ -31,12 +32,13 @@ Not converted: particle effects, so the steam over the mounts' teapot is missing
 
 Category: Collections
 
-- **Narkk** in Booty Bay now sells two new companions: the **Red Panda** and the
-  **Red Panda Backpacker**.
-- Both pets appear on the Pets tab once learned, like any other companion.
+- A red panda breeder, **Nari Rustpaw**, has set up on the Booty Bay boardwalk. She sells red panda
+  companions, among them the **Red Panda** and the **Red Panda Backpacker**, and the rideable
+  **Great Red Panda**.
+- Companions appear on the Pets tab and mounts on the Mounts tab once learned, like any other.
 
-> Red pandas arrived in Azeroth with Mists of Pandaria. Narkk already deals in exotic animals, so
-> he was the obvious smuggler.
+> Red pandas arrived in Azeroth with Mists of Pandaria. Booty Bay never asks where anything came
+> from, so that is where Nari opened shop.
 
 ## Requirements
 
@@ -114,13 +116,14 @@ All in the world database, all from `data/pets.tsv`:
 |---|---|
 | `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502014 the mounts |
 | `spell_dbc`, `skilllineability_dbc` | 90200-90214: the summon spells |
-| `item_template`, `npc_vendor` | 90200-90214: the items, sold by Narkk (2663) |
+| `item_template`, `npc_vendor` | 90200-90214: the items, sold by Nari Rustpaw |
+| `creature_template`, `creature_template_model`, `creature` | 9502090: Nari Rustpaw and her spawn (guid 9502090) in Booty Bay |
 | `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97014: the model patch's displays |
 | `creaturemodeldata_dbc` | 97000-97002: the model patch's three models |
 
 A pet or mount has the same last digits everywhere: row 5 of the list is creature 9502005,
-spell and item 90205 and display 97005. Reserved for more: creatures 9502000-9502099, spells and
-items 90200-90229, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
+spell and item 90205 and display 97005. Reserved for more: creatures 9502000-9502099 (vendors
+from 9502090), spells and items 90200-90229, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
 id, and the item display uses the item's.
 
 ## Columns of data/pets.tsv
@@ -141,8 +144,20 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 | `scale` | the creature's `DisplayScale`, on top of the retail display's own scale (a mount is drawn at its display's scale whatever this says) |
 | `quality` | item quality: 3 rare, 4 epic |
 | `price` | buy price in copper |
-| `vendor` | `creature_template` entry of the NPC that sells the item |
+| `vendor` | `creature_template` entry of the NPC that sells the item: one of `data/vendors.tsv`, or a creature the server already has |
 | `summon_text` | description of the summon spell |
+
+## Columns of data/vendors.tsv
+
+The module's own vendors. The SQL makes each one (level `level`, friendly to both factions, can't
+be attacked) and spawns it.
+
+| Column | Meaning |
+|---|---|
+| `creature`, `guid` | `creature_template` entry and spawn guid |
+| `name`, `subname` | the NPC's name and the title under it |
+| `display`, `scale` | the display it wears, which has to be one from `data/pets.tsv`, and its `DisplayScale` |
+| `map`, `x`, `y`, `z`, `o` | where it stands and which way it faces (in game: `.gps`) |
 
 ## Uninstalling
 
@@ -153,8 +168,9 @@ DELETE FROM `npc_vendor` WHERE `item` BETWEEN 90200 AND 90214;
 DELETE FROM `item_template` WHERE `entry` BETWEEN 90200 AND 90214;
 DELETE FROM `skilllineability_dbc` WHERE `ID` BETWEEN 90200 AND 90214;
 DELETE FROM `spell_dbc` WHERE `ID` BETWEEN 90200 AND 90214;
-DELETE FROM `creature_template_model` WHERE `CreatureID` BETWEEN 9502000 AND 9502014;
-DELETE FROM `creature_template` WHERE `entry` BETWEEN 9502000 AND 9502014;
+DELETE FROM `creature` WHERE `guid` = 9502090;
+DELETE FROM `creature_template_model` WHERE `CreatureID` BETWEEN 9502000 AND 9502090;
+DELETE FROM `creature_template` WHERE `entry` BETWEEN 9502000 AND 9502090;
 DELETE FROM `creature_model_info` WHERE `DisplayID` BETWEEN 97000 AND 97014;
 DELETE FROM `creaturemodeldata_dbc` WHERE `ID` BETWEEN 97000 AND 97002;
 DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` BETWEEN 97000 AND 97014;
