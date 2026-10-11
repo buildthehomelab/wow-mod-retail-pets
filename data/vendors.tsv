@@ -1,2 +1,2 @@
-creature	guid	name	subname	display	scale	level	map	x	y	z	o
-9502090	9502090	Nari Rustpaw	Red Panda Breeder	97001	1.2	30	0	-14329.1	454.382	7.83969	4.5089
+creature	guid	name	subname	display	scale	level	map	x	y	z	o	gossip_menu	text	greeting	text_all	greeting_all	browse
+9502090	9502090	Nari Rustpaw	Red Panda Breeder	97001	1.2	30	0	-14329.1	454.382	7.83969	4.5089	9502090	9502090	Mind your fingers, $c. They nibble.$B$BSome of my pandas will go home with anyone. My rarer coats, and the big ones you can ride, only take to adventurers who have proven themselves. Clear Molten Core and come back to me, and again after every great raid you put behind you. I will have someone new for you each time.	9502091	You have met every panda I have, $n, and they still ask after you. Come and say hello.	Show me your pandas.

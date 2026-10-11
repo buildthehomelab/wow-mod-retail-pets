@@ -38,6 +38,9 @@ on the server, Nari only shows and sells what a player's own progression has unl
 | Naxxramas (level 60) | 7 | Snowy Panda, Violet Panda Backpacker | Great Azure Panda |
 | the Into the Breach quest (Outland opens) | 8 | | Great Violet Panda |
 
+She says so before she opens her window: one greeting while some of her pandas are still locked
+for the player, another once none is.
+
 The phase is the `tier` column of `data/pets.tsv`. It becomes a vendor condition on that module's
 hidden quest 66000 + phase, so the server refuses the purchase too, not just the listing. Set
 every `tier` to 0 to sell everything to everyone. Without mod-individual-progression the server
@@ -141,12 +144,14 @@ All in the world database, all from `data/pets.tsv`:
 | `item_template`, `npc_vendor` | 90200-90214: the items, sold by Nari Rustpaw |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
 | `creature_template`, `creature_template_model`, `creature` | 9502090: Nari Rustpaw and her spawn (guid 9502090) in Booty Bay |
+| `gossip_menu`, `gossip_menu_option`, `npc_text` | menu 9502090 and texts 9502090-9502091: her two greetings and the option that opens her window |
+| `conditions` | gossip conditions (source type 14) on menu 9502090: which greeting a player gets |
 | `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97014: the model patch's displays |
 | `creaturemodeldata_dbc` | 97000-97002: the model patch's three models |
 
 A pet or mount has the same last digits everywhere: row 5 of the list is creature 9502005,
 spell and item 90205 and display 97005. Reserved for more: creatures 9502000-9502099 (vendors
-from 9502090), spells and items 90200-90229, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
+from 9502090, and their gossip menus and texts), spells and items 90200-90229, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
 id, and the item display uses the item's.
 
 ## Columns of data/pets.tsv
@@ -173,7 +178,8 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 ## Columns of data/vendors.tsv
 
 The module's own vendors. The SQL makes each one (level `level`, friendly to both factions, can't
-be attacked) and spawns it.
+be attacked) and spawns it. The last six columns are optional: leave `gossip_menu` empty and a
+click opens the vendor window straight away.
 
 | Column | Meaning |
 |---|---|
@@ -181,12 +187,21 @@ be attacked) and spawns it.
 | `name`, `subname` | the NPC's name and the title under it |
 | `display`, `scale` | the display it wears, which has to be one from `data/pets.tsv`, and its `DisplayScale` |
 | `map`, `x`, `y`, `z`, `o` | where it stands and which way it faces (in game: `.gps`) |
+| `gossip_menu` | id of its gossip menu; with one, a click shows a greeting first |
+| `text`, `greeting` | `npc_text` id and words of the greeting for a player who can't buy everything yet (`$c` class, `$n` name, `$B` line break) |
+| `text_all`, `greeting_all` | the same for a player who can buy everything, and for everyone if no item of the vendor has a `tier` |
+| `browse` | the gossip option that opens the vendor window |
 
 ## Uninstalling
 
 Remove the module folder, rebuild, and delete its rows:
 
 ```sql
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `SourceEntry` BETWEEN 90200 AND 90214;
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 14 AND `SourceGroup` = 9502090;
+DELETE FROM `gossip_menu_option` WHERE `MenuID` = 9502090;
+DELETE FROM `gossip_menu` WHERE `MenuID` = 9502090;
+DELETE FROM `npc_text` WHERE `ID` BETWEEN 9502090 AND 9502091;
 DELETE FROM `npc_vendor` WHERE `item` BETWEEN 90200 AND 90214;
 DELETE FROM `item_template` WHERE `entry` BETWEEN 90200 AND 90214;
 DELETE FROM `skilllineability_dbc` WHERE `ID` BETWEEN 90200 AND 90214;

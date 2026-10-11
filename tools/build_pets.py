@@ -34,6 +34,9 @@ A row's `tier` is the mod-individual-progression phase its item waits for: the v
 sells it only to a player who has cleared that phase (0 = to everyone). The SQL does that with a
 vendor condition on the phase's hidden quest, 66000 + tier.
 
+A vendor with a `gossip_menu` greets the player before it opens its window: with `greeting` while
+some item of its is still locked for that player, and with `greeting_all` once none is.
+
 Running it again on its own output changes nothing. Needs Python 3 and StormLib (`STORMLIB`,
 default /usr/local/lib/libstorm.dylib).
 """
@@ -61,8 +64,11 @@ UNSET = 0xFFFFFFFF
 # every phase up to theirs. Phases run from 0 (new character) to 18.
 PROGRESSION_QUEST = 66000
 PROGRESSION_PHASES = range(0, 19)
+CONDITION_SOURCE_GOSSIP_MENU = 14
 CONDITION_SOURCE_NPC_VENDOR = 23
 CONDITION_QUESTREWARDED = 8
+NPCFLAG_GOSSIP, NPCFLAG_VENDOR = 1, 128
+GOSSIP_OPTION_VENDOR, GOSSIP_ICON_VENDOR = 3, 1
 
 # What a row of each `form` becomes. A mount is a ground mount any rider can use: its item asks
 # for Apprentice Riding and no level, like the stock mounts whose speed a server scales.
@@ -292,6 +298,15 @@ def load_vendors(path, pets):
             v[k] = int(v[k])
         for k in ("scale", "x", "y", "z", "o"):
             v[k] = float(v[k])
+        v["gossip_menu"] = int(v.get("gossip_menu") or 0)
+        if v["gossip_menu"]:
+            for k in ("text", "text_all"):
+                v[k] = int(v[k])
+            for k in ("greeting", "greeting_all", "browse"):
+                if not v[k]:
+                    sys.exit("%s: %s has a gossip menu and no %s" % (path, v["name"], k))
+            # the last phase any of its items waits for: past it, nothing is locked
+            v["last_tier"] = max((p["tier"] for p in pets if p["vendor"] == v["creature"]), default=0)
         if v["display"] not in displays:
             sys.exit("%s: %s wears display %d, which no row of the pet list has" % (path, v["name"], v["display"]))
         if v["creature"] in taken:
@@ -299,6 +314,9 @@ def load_vendors(path, pets):
         taken.add(v["creature"])
     if len({v["guid"] for v in vendors}) != len(vendors):
         sys.exit("%s: two vendors share a spawn guid" % path)
+    texts = [v[k] for v in vendors if v["gossip_menu"] for k in ("text", "text_all")]
+    if len(set(texts)) != len(texts):
+        sys.exit("%s: two greetings share a text id" % path)
     return vendors
 
 
@@ -386,6 +404,46 @@ def id_list(values):
     return ", ".join(str(v) for v in values)
 
 
+def write_gossip(f, vendors):
+    """The greeting of each vendor that has one, and the option under it that opens its window. A
+    vendor with locked items has two texts on its menu, told apart by the last phase's quest."""
+    if not vendors:
+        return
+    menus = id_list(v["gossip_menu"] for v in vendors)
+    f.write("-- Their greetings: one while some item is still locked for the player, one once none is.\n")
+    f.write("DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = %d AND `SourceGroup` IN (%s);\n" % (
+        CONDITION_SOURCE_GOSSIP_MENU, menus))
+    f.write("DELETE FROM `gossip_menu_option` WHERE `MenuID` IN (%s);\n" % menus)
+    f.write("DELETE FROM `gossip_menu` WHERE `MenuID` IN (%s);\n" % menus)
+    f.write("DELETE FROM `npc_text` WHERE `ID` IN (%s);\n" % id_list(v[k] for v in vendors for k in ("text", "text_all")))
+    texts, menu, conditions = [], [], []
+    for v in vendors:
+        shown = [("text_all", "greeting_all", 0)]
+        if v["last_tier"]:
+            shown.insert(0, ("text", "greeting", 1))
+        for text, greeting, negative in shown:
+            texts.append("(%d, %s, %s, 0, 0, 1)" % (v[text], sql_str(v[greeting]), sql_str(v[greeting])))
+            menu.append("(%d, %d)" % (v["gossip_menu"], v[text]))
+            if v["last_tier"]:
+                conditions.append("(%d, %d, %d, 0, 0, %d, 0, %d, 0, 0, %d, 0, 0, '', %s)" % (
+                    CONDITION_SOURCE_GOSSIP_MENU, v["gossip_menu"], v[text], CONDITION_QUESTREWARDED,
+                    PROGRESSION_QUEST + v["last_tier"], negative,
+                    sql_str("%s greets a player who has %scleared progression phase %d" % (
+                        v["name"], "not " if negative else "", v["last_tier"]))))
+    f.write("INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `BroadcastTextID0`, `lang0`, `Probability0`) VALUES\n")
+    f.write(",\n".join(texts) + ";\n")
+    f.write("INSERT INTO `gossip_menu` (`MenuID`, `TextID`) VALUES\n")
+    f.write(",\n".join(menu) + ";\n")
+    f.write("INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`) VALUES\n")
+    f.write(",\n".join("(%d, 0, %d, %s, 0, %d, %d, 0, 0, 0, 0, '', 0)" % (
+        v["gossip_menu"], GOSSIP_ICON_VENDOR, sql_str(v["browse"]), GOSSIP_OPTION_VENDOR, NPCFLAG_VENDOR)
+        for v in vendors) + ";\n")
+    if conditions:
+        f.write("INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES\n")
+        f.write(",\n".join(conditions) + ";\n")
+    f.write("\n")
+
+
 def write_sql(path, pets, vendors, new_spells, patch_z, tmp):
     def spell_value(i, v):
         if i in STRING_FIELDS:
@@ -424,15 +482,17 @@ def write_sql(path, pets, vendors, new_spells, patch_z, tmp):
         f.write(",\n".join("(%d, 0, %d, %g, 1)" % (p["creature"], p["display"], p["scale"]) for p in pets) + ";\n\n")
 
         if vendors:
-            f.write("-- Who sells them: friendly to everyone, can't be attacked, opens the vendor window on a click.\n")
-            f.write("INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES\n")
-            f.write(",\n".join("(%d, %s, %s, %d, %d, 35, 128, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 2)" % (
-                v["creature"], sql_str(v["name"]), sql_str(v["subname"]), v["level"], v["level"]) for v in vendors) + ";\n")
+            f.write("-- Who sells them: friendly to everyone, can't be attacked, a vendor (with a greeting first, if it has one).\n")
+            f.write("INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES\n")
+            f.write(",\n".join("(%d, %s, %s, %d, %d, %d, 35, %d, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 2)" % (
+                v["creature"], sql_str(v["name"]), sql_str(v["subname"]), v["gossip_menu"], v["level"], v["level"],
+                NPCFLAG_VENDOR | (NPCFLAG_GOSSIP if v["gossip_menu"] else 0)) for v in vendors) + ";\n")
             f.write("INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES\n")
             f.write(",\n".join("(%d, 0, %d, %g, 1)" % (v["creature"], v["display"], v["scale"]) for v in vendors) + ";\n")
             f.write("INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`) VALUES\n")
             f.write(",\n".join("(%d, %d, %d, 1, 1, %g, %g, %g, %g, 300, 0, 0)" % (
                 v["guid"], v["creature"], v["map"], v["x"], v["y"], v["z"], v["o"]) for v in vendors) + ";\n\n")
+        write_gossip(f, [v for v in vendors if v["gossip_menu"]])
 
         f.write("-- Their summon spells (client: Spell.dbc in the spell patch), on the Companions and Mounts skill lines.\n")
         f.write("DELETE FROM `spell_dbc` WHERE `ID` IN (%s);\n" % id_list(spells))
