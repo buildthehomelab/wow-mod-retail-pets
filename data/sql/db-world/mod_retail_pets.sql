@@ -39,13 +39,30 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 (9502013, 0, 97013, 1, 1),
 (9502014, 0, 97014, 1, 1);
 
--- Who sells them: friendly to everyone, can't be attacked, opens the vendor window on a click.
-INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES
-(9502090, 'Nari Rustpaw', 'Red Panda Breeder', 30, 30, 35, 128, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 2);
+-- Who sells them: friendly to everyone, can't be attacked, a vendor (with a greeting first, if it has one).
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES
+(9502090, 'Nari Rustpaw', 'Red Panda Breeder', 9502090, 30, 30, 35, 129, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 2);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
 (9502090, 0, 97001, 1.2, 1);
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`) VALUES
 (9502090, 9502090, 0, 1, 1, -14329.1, 454.382, 7.83969, 4.5089, 300, 0, 0);
+
+-- Their greetings: one while some item is still locked for the player, one once none is.
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 14 AND `SourceGroup` IN (9502090);
+DELETE FROM `gossip_menu_option` WHERE `MenuID` IN (9502090);
+DELETE FROM `gossip_menu` WHERE `MenuID` IN (9502090);
+DELETE FROM `npc_text` WHERE `ID` IN (9502090, 9502091);
+INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `BroadcastTextID0`, `lang0`, `Probability0`) VALUES
+(9502090, 'Mind your fingers, $c. They nibble.$B$BSome of my pandas will go home with anyone. My rarer coats, and the big ones you can ride, only take to adventurers who have proven themselves. Clear Molten Core and come back to me, and again after every great raid you put behind you. I will have someone new for you each time.', 'Mind your fingers, $c. They nibble.$B$BSome of my pandas will go home with anyone. My rarer coats, and the big ones you can ride, only take to adventurers who have proven themselves. Clear Molten Core and come back to me, and again after every great raid you put behind you. I will have someone new for you each time.', 0, 0, 1),
+(9502091, 'You have met every panda I have, $n, and they still ask after you. Come and say hello.', 'You have met every panda I have, $n, and they still ask after you. Come and say hello.', 0, 0, 1);
+INSERT INTO `gossip_menu` (`MenuID`, `TextID`) VALUES
+(9502090, 9502090),
+(9502090, 9502091);
+INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`) VALUES
+(9502090, 0, 1, 'Show me your pandas.', 0, 3, 128, 0, 0, 0, 0, '', 0);
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES
+(14, 9502090, 9502090, 0, 0, 8, 0, 66008, 0, 0, 1, 0, 0, '', 'Nari Rustpaw greets a player who has not cleared progression phase 8'),
+(14, 9502090, 9502091, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Nari Rustpaw greets a player who has cleared progression phase 8');
 
 -- Their summon spells (client: Spell.dbc in the spell patch), on the Companions and Mounts skill lines.
 DELETE FROM `spell_dbc` WHERE `ID` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
