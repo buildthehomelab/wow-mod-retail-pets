@@ -3,8 +3,9 @@
 -- The client needs the module's two patches (see the README), or it shows nothing at all.
 
 -- The pets and the mounts' creatures.
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014);
-DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014);
+DELETE FROM `creature` WHERE `guid` IN (9502090);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502090);
+DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502090);
 INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `movementId`, `flags_extra`) VALUES
 (9502000, 'Red Panda', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
 (9502001, 'Red Panda Backpacker', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
@@ -37,6 +38,14 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 (9502012, 0, 97012, 1, 1),
 (9502013, 0, 97013, 1, 1),
 (9502014, 0, 97014, 1, 1);
+
+-- Who sells them: friendly to everyone, can't be attacked, opens the vendor window on a click.
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES
+(9502090, 'Nari Rustpaw', 'Red Panda Breeder', 30, 30, 35, 128, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 2);
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
+(9502090, 0, 97001, 1.2, 1);
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`) VALUES
+(9502090, 9502090, 0, 1, 1, -14338.9, 446.054, 7.62809, 4.5089, 300, 0, 0);
 
 -- Their summon spells (client: Spell.dbc in the spell patch), on the Companions and Mounts skill lines.
 DELETE FROM `spell_dbc` WHERE `ID` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
@@ -94,21 +103,21 @@ INSERT INTO `item_template` (`entry`, `class`, `subclass`, `name`, `displayid`, 
 (90213, 15, 5, 'Great Crimson Panda', 90213, 4, 0, 100000, 25000, 20, 762, 75, 0, 55884, -1, 90213, 6, 1, 'Teaches you how to summon this mount.', -1, 0),
 (90214, 15, 5, 'Great Violet Panda', 90214, 4, 0, 100000, 25000, 20, 762, 75, 0, 55884, -1, 90214, 6, 1, 'Teaches you how to summon this mount.', -1, 0);
 INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES
-(2663, 0, 90200, 0, 0, 0),
-(2663, 0, 90201, 0, 0, 0),
-(2663, 0, 90202, 0, 0, 0),
-(2663, 0, 90203, 0, 0, 0),
-(2663, 0, 90204, 0, 0, 0),
-(2663, 0, 90205, 0, 0, 0),
-(2663, 0, 90206, 0, 0, 0),
-(2663, 0, 90207, 0, 0, 0),
-(2663, 0, 90208, 0, 0, 0),
-(2663, 0, 90209, 0, 0, 0),
-(2663, 0, 90210, 0, 0, 0),
-(2663, 0, 90211, 0, 0, 0),
-(2663, 0, 90212, 0, 0, 0),
-(2663, 0, 90213, 0, 0, 0),
-(2663, 0, 90214, 0, 0, 0);
+(9502090, 1, 90200, 0, 0, 0),
+(9502090, 2, 90201, 0, 0, 0),
+(9502090, 3, 90202, 0, 0, 0),
+(9502090, 4, 90203, 0, 0, 0),
+(9502090, 5, 90204, 0, 0, 0),
+(9502090, 6, 90205, 0, 0, 0),
+(9502090, 7, 90206, 0, 0, 0),
+(9502090, 8, 90207, 0, 0, 0),
+(9502090, 9, 90208, 0, 0, 0),
+(9502090, 10, 90209, 0, 0, 0),
+(9502090, 11, 90210, 0, 0, 0),
+(9502090, 12, 90211, 0, 0, 0),
+(9502090, 13, 90212, 0, 0, 0),
+(9502090, 14, 90213, 0, 0, 0),
+(9502090, 15, 90214, 0, 0, 0);
 
 -- The model patch's CreatureDisplayInfo and CreatureModelData rows, for the server's DBC stores.
 DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014);
