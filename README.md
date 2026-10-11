@@ -23,6 +23,26 @@ a stock 100% mount, so they are epic-speed mounts unless the server scales mount
 (such as [mod-mount-scaling](https://github.com/buildthehomelab/wow-mod-mount-scaling), which
 treats them like every other ground mount).
 
+## Progression
+
+With [mod-individual-progression](https://github.com/ZhengPeiRu21/mod-individual-progression)
+on the server, Nari only shows and sells what a player's own progression has unlocked:
+
+| Sold once the player has cleared | Phase | Companions | Mount |
+|---|---|---|---|
+| nothing: from the start | 0 | Red Panda, Red Panda Backpacker | |
+| Molten Core | 1 | Sunfur Panda, Crimson Panda Backpacker | Great Red Panda |
+| Onyxia's Lair | 2 | Mountain Panda | |
+| Blackwing Lair | 3 | Ashen Panda Backpacker | Great Crimson Panda |
+| the Temple of Ahn'Qiraj | 6 | Moonfur Panda, Azure Panda Backpacker | Great Ashen Panda |
+| Naxxramas (level 60) | 7 | Snowy Panda, Violet Panda Backpacker | Great Azure Panda |
+| the Into the Breach quest (Outland opens) | 8 | | Great Violet Panda |
+
+The phase is the `tier` column of `data/pets.tsv`. It becomes a vendor condition on that module's
+hidden quest 66000 + phase, so the server refuses the purchase too, not just the listing. Set
+every `tier` to 0 to sell everything to everyone. Without mod-individual-progression the server
+has no such quests: it logs each condition as skipped at startup and Nari sells everything.
+
 Everything is listed in [`data/pets.tsv`](data/pets.tsv), one row per pet or mount. Another
 retail creature becomes one by adding a row and running the two tools below.
 
@@ -36,6 +56,8 @@ Category: Collections
   companions, among them the **Red Panda** and the **Red Panda Backpacker**, and the rideable
   **Great Red Panda**.
 - Companions appear on the Pets tab and mounts on the Mounts tab once learned, like any other.
+- Nari starts you off with two companions. The other coats and the mounts join her stock as you
+  clear raids: Molten Core brings the first mount, and the last arrives when the Dark Portal opens.
 
 > Red pandas arrived in Azeroth with Mists of Pandaria. Booty Bay never asks where anything came
 > from, so that is where Nari opened shop.
@@ -117,6 +139,7 @@ All in the world database, all from `data/pets.tsv`:
 | `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502014 the mounts |
 | `spell_dbc`, `skilllineability_dbc` | 90200-90214: the summon spells |
 | `item_template`, `npc_vendor` | 90200-90214: the items, sold by Nari Rustpaw |
+| `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
 | `creature_template`, `creature_template_model`, `creature` | 9502090: Nari Rustpaw and her spawn (guid 9502090) in Booty Bay |
 | `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97014: the model patch's displays |
 | `creaturemodeldata_dbc` | 97000-97002: the model patch's three models |
@@ -135,7 +158,7 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 | `display` | CreatureDisplayInfo id of the pet or mount |
 | `retail_display` | the retail CreatureDisplayInfo id it is converted from |
 | `form` | `pet` or `mount`: which stock display the builder clones for sounds and size (`template` in `pack.json`), and what `build_pets.py` makes of the row |
-| `tier` | always `0` (the builder's unlock tier) |
+| `tier` | the mod-individual-progression phase (0-18) a player has to have cleared before the vendor sells it; `0` = from the start |
 | `model` | name of the model's folder and files, in snake_case |
 | `name` | name of the pet or mount, its spell and its item |
 | `variant`, `textures` | empty (builder options the pets don't use) |

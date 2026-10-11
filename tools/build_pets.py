@@ -30,6 +30,10 @@ A row's `vendor` is the creature that sells its item. data/vendors.tsv lists the
 vendors (the SQL makes and spawns those); any other entry is taken to be a creature the server
 already has.
 
+A row's `tier` is the mod-individual-progression phase its item waits for: the vendor shows and
+sells it only to a player who has cleared that phase (0 = to everyone). The SQL does that with a
+vendor condition on the phase's hidden quest, 66000 + tier.
+
 Running it again on its own output changes nothing. Needs Python 3 and StormLib (`STORMLIB`,
 default /usr/local/lib/libstorm.dylib).
 """
@@ -52,6 +56,13 @@ ITEM_SPELLTRIGGER_LEARN = 6
 ITEM_CLASS_MISC = 15
 SKILL_RIDING, RIDING_APPRENTICE = 762, 75
 UNSET = 0xFFFFFFFF
+
+# mod-individual-progression keeps a player's phase as rewarded hidden quests: 66000 + phase, for
+# every phase up to theirs. Phases run from 0 (new character) to 18.
+PROGRESSION_QUEST = 66000
+PROGRESSION_PHASES = range(0, 19)
+CONDITION_SOURCE_NPC_VENDOR = 23
+CONDITION_QUESTREWARDED = 8
 
 # What a row of each `form` becomes. A mount is a ground mount any rider can use: its item asks
 # for Apprentice Riding and no level, like the stock mounts whose speed a server scales.
@@ -252,8 +263,10 @@ def load_pets(path):
     head = lines[0].split("\t")
     pets = [dict(zip(head, l.split("\t"))) for l in lines[1:] if l.strip()]
     for p in pets:
-        for k in ("display", "creature", "spell", "item", "icon_fdid", "quality", "price", "vendor"):
+        for k in ("display", "tier", "creature", "spell", "item", "icon_fdid", "quality", "price", "vendor"):
             p[k] = int(p[k])
+        if p["tier"] not in PROGRESSION_PHASES:
+            sys.exit("%s: %s has tier %d, which is no progression phase" % (path, p["name"], p["tier"]))
         p["scale"] = float(p["scale"])
         if p["form"] not in KINDS:
             sys.exit("%s: %s is a %s, not one of %s" % (path, p["name"], p["form"], ", ".join(KINDS)))
@@ -454,7 +467,20 @@ def write_sql(path, pets, vendors, new_spells, patch_z, tmp):
         for p in pets:  # a vendor lists its items in the order of the pet list
             slots[p["vendor"]] = slots.get(p["vendor"], 0) + 1
             lines.append("(%d, %d, %d, 0, 0, 0)" % (p["vendor"], slots[p["vendor"]], p["item"]))
-        f.write(",\n".join(lines) + ";\n\n")
+        f.write(",\n".join(lines) + ";\n")
+        f.write("DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = %d AND `SourceEntry` IN (%s);\n" % (
+            CONDITION_SOURCE_NPC_VENDOR, id_list(items)))
+        gated = [p for p in pets if p["tier"]]
+        if gated:
+            f.write("-- A vendor shows and sells an item only to a player who has cleared its progression phase\n")
+            f.write("-- (mod-individual-progression's hidden quest 66000 + phase).\n")
+            f.write("INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES\n")
+            f.write(",\n".join("(%d, %d, %d, 0, 0, %d, 0, %d, 0, 0, 0, 0, 0, '', %s)" % (
+                CONDITION_SOURCE_NPC_VENDOR, p["vendor"], p["item"], CONDITION_QUESTREWARDED,
+                PROGRESSION_QUEST + p["tier"],
+                sql_str("%s is sold once the player has cleared progression phase %d" % (p["name"], p["tier"])))
+                for p in gated) + ";\n")
+        f.write("\n")
 
         f.write("-- The model patch's CreatureDisplayInfo and CreatureModelData rows, for the server's DBC stores.\n")
         f.write("DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (%s);\n" % id_list(displays))
