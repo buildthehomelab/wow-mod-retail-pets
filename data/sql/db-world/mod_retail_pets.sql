@@ -45,7 +45,7 @@ INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlev
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
 (9502090, 0, 97001, 1.2, 1);
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `MovementType`) VALUES
-(9502090, 9502090, 0, 1, 1, -14338.9, 446.054, 7.62809, 4.5089, 300, 0, 0);
+(9502090, 9502090, 0, 1, 1, -14329.1, 454.382, 7.83969, 4.5089, 300, 0, 0);
 
 -- Their summon spells (client: Spell.dbc in the spell patch), on the Companions and Mounts skill lines.
 DELETE FROM `spell_dbc` WHERE `ID` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
@@ -118,6 +118,23 @@ INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `Exte
 (9502090, 13, 90212, 0, 0, 0),
 (9502090, 14, 90213, 0, 0, 0),
 (9502090, 15, 90214, 0, 0, 0);
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `SourceEntry` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
+-- A vendor shows and sells an item only to a player who has cleared its progression phase
+-- (mod-individual-progression's hidden quest 66000 + phase).
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES
+(23, 9502090, 90202, 0, 0, 8, 0, 66001, 0, 0, 0, 0, 0, '', 'Sunfur Panda is sold once the player has cleared progression phase 1'),
+(23, 9502090, 90203, 0, 0, 8, 0, 66007, 0, 0, 0, 0, 0, '', 'Snowy Panda is sold once the player has cleared progression phase 7'),
+(23, 9502090, 90204, 0, 0, 8, 0, 66002, 0, 0, 0, 0, 0, '', 'Mountain Panda is sold once the player has cleared progression phase 2'),
+(23, 9502090, 90205, 0, 0, 8, 0, 66006, 0, 0, 0, 0, 0, '', 'Moonfur Panda is sold once the player has cleared progression phase 6'),
+(23, 9502090, 90206, 0, 0, 8, 0, 66006, 0, 0, 0, 0, 0, '', 'Azure Panda Backpacker is sold once the player has cleared progression phase 6'),
+(23, 9502090, 90207, 0, 0, 8, 0, 66003, 0, 0, 0, 0, 0, '', 'Ashen Panda Backpacker is sold once the player has cleared progression phase 3'),
+(23, 9502090, 90208, 0, 0, 8, 0, 66001, 0, 0, 0, 0, 0, '', 'Crimson Panda Backpacker is sold once the player has cleared progression phase 1'),
+(23, 9502090, 90209, 0, 0, 8, 0, 66007, 0, 0, 0, 0, 0, '', 'Violet Panda Backpacker is sold once the player has cleared progression phase 7'),
+(23, 9502090, 90210, 0, 0, 8, 0, 66001, 0, 0, 0, 0, 0, '', 'Great Red Panda is sold once the player has cleared progression phase 1'),
+(23, 9502090, 90211, 0, 0, 8, 0, 66007, 0, 0, 0, 0, 0, '', 'Great Azure Panda is sold once the player has cleared progression phase 7'),
+(23, 9502090, 90212, 0, 0, 8, 0, 66006, 0, 0, 0, 0, 0, '', 'Great Ashen Panda is sold once the player has cleared progression phase 6'),
+(23, 9502090, 90213, 0, 0, 8, 0, 66003, 0, 0, 0, 0, 0, '', 'Great Crimson Panda is sold once the player has cleared progression phase 3'),
+(23, 9502090, 90214, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Great Violet Panda is sold once the player has cleared progression phase 8');
 
 -- The model patch's CreatureDisplayInfo and CreatureModelData rows, for the server's DBC stores.
 DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014);
