@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
-"""The spell and item side of the pets in data/pets.tsv: rows for the realm's spell patch and the
-module's world database SQL.
+"""The spell and item side of the pets and mounts in data/pets.tsv: rows for the realm's spell
+patch and the module's world database SQL.
 
     python3 build_pets.py --patch-w patch-W.MPQ --patch-z patch-Z.MPQ --client /path/to/client \\
         --cache <download dir> --out patch-W-new.MPQ --sql ../data/sql/db-world/mod_retail_pets.sql
 
-The pet models are a separate patch (patch-Z.MPQ), built first from this repo's pack.json by
+The models are a separate patch (patch-Z.MPQ), built first from this repo's pack.json by
 wow-mod-retail-creatures' tools/build_patch.py. This tool does the rest.
 
 --patch-w is the patch that carries the realm's Spell.dbc, Item.dbc, SkillLineAbility.dbc and
-ItemDisplayInfo.dbc (ours is patch-W.MPQ). A patch MPQ replaces whole files, so the pets' rows go
-into its copies; every other file in it is copied unchanged. Per pet it gains:
+ItemDisplayInfo.dbc (ours is patch-W.MPQ). A patch MPQ replaces whole files, so the new rows go
+into its copies; every other file in it is copied unchanged. Per pet or mount it gains:
 
-- Spell.dbc: the summon spell, a copy of Bombay Cat (10673) with the pet's creature, name and icon.
-- SkillLineAbility.dbc: that spell on the Companions skill line, which puts it on the Pets tab.
-- Item.dbc and ItemDisplayInfo.dbc: the item that teaches it, with the pet's icon.
+- Spell.dbc: the summon spell, a copy of Bombay Cat (10673) for a pet and of Amani War Bear
+  (43688) for a mount, with the row's creature, name and icon.
+- SkillLineAbility.dbc: that spell on the Companions or the Mounts skill line, which puts it on
+  the Pets or the Mounts tab.
+- Item.dbc and ItemDisplayInfo.dbc: the item that teaches it, with the row's icon.
 - SpellIcon.dbc: the icon. If the patch has no SpellIcon.dbc yet, the client's own copy (--client,
   newest locale patch) is the base.
 - Interface\\Icons\\<icon>.blp, downloaded from wago.tools into --cache.
@@ -40,13 +42,30 @@ import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-TEMPLATE_SPELL = 10673          # Bombay Cat: summon companion, instant, no cost
 TEMPLATE_ITEM_DISPLAY = 20629   # Cat Carrier (Bombay)'s display: an icon and nothing else
-SKILL_COMPANIONS = 778
-SPELL_LEARNING = 55884          # item spell 1 of every companion item; teaches item spell 2
+SPELL_LEARNING = 55884          # item spell 1 of every companion and mount item; teaches item spell 2
 ITEM_SPELLTRIGGER_LEARN = 6
-ITEM_CLASS_MISC, ITEM_SUBCLASS_PET = 15, 2
+ITEM_CLASS_MISC = 15
+SKILL_RIDING, RIDING_APPRENTICE = 762, 75
 UNSET = 0xFFFFFFFF
+
+# What a row of each `form` becomes. A mount is a ground mount any rider can use: its item asks
+# for Apprentice Riding and no level, like the stock mounts whose speed a server scales.
+#   spell     Spell.dbc row the summon spell copies: Bombay Cat (summon companion) and Amani War
+#             Bear (mounted aura on the creature, +100% mounted speed, 1.5 s cast, outdoors)
+#   skill     its skill line: Companions or Mounts
+#   subclass  item subclass: pet or mount
+#   item      (Flags, RequiredSkill, RequiredSkillRank, bonding, BagFamily) of the item, from
+#             Cat Carrier (Bombay) and Amani War Bear
+#   creature  (faction, unit_flags, type, movementId, flags_extra) of the creature, from Bombay
+#             Cat and the Amani War Bear mount
+#   model     (BoundingRadius, CombatReach) of its display
+KINDS = {
+    "pet": dict(spell=10673, skill=778, subclass=2, item=(64, 0, 0, 0, 4096),
+                creature=(188, 768, 12, 121, 2), model=(0.25, 0.5)),
+    "mount": dict(spell=43688, skill=777, subclass=5, item=(0, SKILL_RIDING, RIDING_APPRENTICE, 1, 0),
+                  creature=(35, 0, 1, 140, 0), model=(1.45, 1.5)),
+}
 
 SPELL_FIELDS = 234
 F_EFFECT_MISC, F_ICON, F_ACTIVE_ICON, F_NAME, F_DESCRIPTION = 110, 133, 134, 136, 170
@@ -229,9 +248,12 @@ def load_pets(path):
     head = lines[0].split("\t")
     pets = [dict(zip(head, l.split("\t"))) for l in lines[1:] if l.strip()]
     for p in pets:
-        for k in ("display", "creature", "spell", "item", "icon_fdid", "price", "vendor"):
+        for k in ("display", "creature", "spell", "item", "icon_fdid", "quality", "price", "vendor"):
             p[k] = int(p[k])
         p["scale"] = float(p["scale"])
+        if p["form"] not in KINDS:
+            sys.exit("%s: %s is a %s, not one of %s" % (path, p["name"], p["form"], ", ".join(KINDS)))
+        p["kind"] = KINDS[p["form"]]
     for k in ("display", "creature", "spell", "item"):
         if len({p[k] for p in pets}) != len(pets):
             sys.exit("%s: two pets share a %s id" % (path, k))
@@ -276,7 +298,7 @@ def patch_w(files, pets, args, tmp):
 
     new_spells = []
     for p in pets:
-        spell = template(spells, TEMPLATE_SPELL, "Spell.dbc row")
+        spell = template(spells, p["kind"]["spell"], "Spell.dbc row")
         spell[0] = p["spell"]
         spell[F_EFFECT_MISC] = p["creature"]
         spell[F_ICON] = p["spell"]
@@ -286,8 +308,8 @@ def patch_w(files, pets, args, tmp):
         upsert(spells, spell)
         new_spells.append(spell)
 
-        upsert(abilities, [p["spell"], SKILL_COMPANIONS, p["spell"], 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])
-        upsert(items, [p["item"], ITEM_CLASS_MISC, ITEM_SUBCLASS_PET, UNSET, UNSET, p["item"], 0, 0])
+        upsert(abilities, [p["spell"], p["kind"]["skill"], p["spell"], 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])
+        upsert(items, [p["item"], ITEM_CLASS_MISC, p["kind"]["subclass"], UNSET, UNSET, p["item"], 0, 0])
         display = template(displays, TEMPLATE_ITEM_DISPLAY, "ItemDisplayInfo.dbc row")
         display[0] = p["item"]
         display[5] = add_string(display_str, p["icon"])
@@ -343,20 +365,20 @@ def write_sql(path, pets, new_spells, patch_z, tmp):
     creatures, spells, items = ([p[k] for p in pets] for k in ("creature", "spell", "item"))
     displays, models = [r[0] for r in cdi], [r[0] for r in cmd]
     with open(path, "w", encoding="utf-8") as f:
-        f.write("-- mod-retail-pets: companion pets with retail models. Generated by tools/build_pets.py from\n")
+        f.write("-- mod-retail-pets: companion pets and mounts with retail models. Generated by tools/build_pets.py from\n")
         f.write("-- data/pets.tsv: change that file and run the tool again, don't edit this one.\n")
-        f.write("-- The client needs the module's two patches (see the README), or it shows no pet at all.\n\n")
+        f.write("-- The client needs the module's two patches (see the README), or it shows nothing at all.\n\n")
 
-        f.write("-- The pets.\n")
+        f.write("-- The pets and the mounts' creatures.\n")
         f.write("DELETE FROM `creature_template_model` WHERE `CreatureID` IN (%s);\n" % id_list(creatures))
         f.write("DELETE FROM `creature_template` WHERE `entry` IN (%s);\n" % id_list(creatures))
         f.write("INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `movementId`, `flags_extra`) VALUES\n")
-        f.write(",\n".join("(%d, %s, 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2)" % (p["creature"], sql_str(p["name"]))
-                           for p in pets) + ";\n")
+        f.write(",\n".join("(%d, %s, 1, 1, %d, 1, 1.14286, 2000, 2000, 1, %d, 2048, %d, %d, %d)" % (
+            p["creature"], sql_str(p["name"]), *p["kind"]["creature"]) for p in pets) + ";\n")
         f.write("INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES\n")
         f.write(",\n".join("(%d, 0, %d, %g, 1)" % (p["creature"], p["display"], p["scale"]) for p in pets) + ";\n\n")
 
-        f.write("-- Their summon spells (client: Spell.dbc in the spell patch), on the Companions skill line.\n")
+        f.write("-- Their summon spells (client: Spell.dbc in the spell patch), on the Companions and Mounts skill lines.\n")
         f.write("DELETE FROM `spell_dbc` WHERE `ID` IN (%s);\n" % id_list(spells))
         f.write("INSERT INTO `spell_dbc` VALUES\n")
         lines = []
@@ -368,16 +390,21 @@ def write_sql(path, pets, new_spells, patch_z, tmp):
         f.write(",\n".join(lines) + ";\n")
         f.write("DELETE FROM `skilllineability_dbc` WHERE `ID` IN (%s);\n" % id_list(spells))
         f.write("INSERT INTO `skilllineability_dbc` (`ID`, `SkillLine`, `Spell`, `RaceMask`, `ClassMask`, `ExcludeRace`, `ExcludeClass`, `MinSkillLineRank`, `SupercededBySpell`, `AcquireMethod`, `TrivialSkillLineRankHigh`, `TrivialSkillLineRankLow`, `CharacterPoints_1`, `CharacterPoints_2`) VALUES\n")
-        f.write(",\n".join("(%d, %d, %d, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0)" % (p["spell"], SKILL_COMPANIONS, p["spell"])
+        f.write(",\n".join("(%d, %d, %d, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0)" % (p["spell"], p["kind"]["skill"], p["spell"])
                            for p in pets) + ";\n\n")
 
         f.write("-- The items that teach them, and who sells those.\n")
         f.write("DELETE FROM `npc_vendor` WHERE `item` IN (%s);\n" % id_list(items))
         f.write("DELETE FROM `item_template` WHERE `entry` IN (%s);\n" % id_list(items))
-        f.write("INSERT INTO `item_template` (`entry`, `class`, `subclass`, `name`, `displayid`, `Quality`, `Flags`, `BuyPrice`, `SellPrice`, `ItemLevel`, `delay`, `spellid_1`, `spellcharges_1`, `spellid_2`, `spelltrigger_2`, `description`, `Material`, `BagFamily`) VALUES\n")
-        f.write(",\n".join("(%d, %d, %d, %s, %d, 3, 64, %d, %d, 20, 0, %d, -1, %d, %d, 'Teaches you how to summon this companion.', -1, 4096)" % (
-            p["item"], ITEM_CLASS_MISC, ITEM_SUBCLASS_PET, sql_str(p["name"]), p["item"], p["price"], p["price"] // 4,
-            SPELL_LEARNING, p["spell"], ITEM_SPELLTRIGGER_LEARN) for p in pets) + ";\n")
+        f.write("INSERT INTO `item_template` (`entry`, `class`, `subclass`, `name`, `displayid`, `Quality`, `Flags`, `BuyPrice`, `SellPrice`, `ItemLevel`, `RequiredSkill`, `RequiredSkillRank`, `delay`, `spellid_1`, `spellcharges_1`, `spellid_2`, `spelltrigger_2`, `bonding`, `description`, `Material`, `BagFamily`) VALUES\n")
+        lines = []
+        for p in pets:
+            flags, skill, rank, bonding, bag = p["kind"]["item"]
+            lines.append("(%d, %d, %d, %s, %d, %d, %d, %d, %d, 20, %d, %d, 0, %d, -1, %d, %d, %d, %s, -1, %d)" % (
+                p["item"], ITEM_CLASS_MISC, p["kind"]["subclass"], sql_str(p["name"]), p["item"], p["quality"], flags,
+                p["price"], p["price"] // 4, skill, rank, SPELL_LEARNING, p["spell"], ITEM_SPELLTRIGGER_LEARN, bonding,
+                sql_str("Teaches you how to summon this %s." % ("mount" if p["form"] == "mount" else "companion")), bag))
+        f.write(",\n".join(lines) + ";\n")
         f.write("INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES\n")
         f.write(",\n".join("(%d, 0, %d, 0, 0, 0)" % (p["vendor"], p["item"]) for p in pets) + ";\n\n")
 
@@ -396,7 +423,7 @@ def write_sql(path, pets, new_spells, patch_z, tmp):
             for r in cmd) + ";\n")
         f.write("DELETE FROM `creature_model_info` WHERE `DisplayID` IN (%s);\n" % id_list(displays))
         f.write("INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES\n")
-        f.write(",\n".join("(%d, 0.25, 0.5, 2, 0)" % d for d in displays) + ";\n")
+        f.write(",\n".join("(%d, %g, %g, 2, 0)" % (p["display"], *p["kind"]["model"]) for p in pets) + ";\n")
     print("wrote", path)
 
 
@@ -417,7 +444,7 @@ def main():
         files = unpack(args.patch_w, tmp)
         new_spells = patch_w(files, pets, args, tmp)
         pack(args.out, [(local, name) for name, local in sorted(files.items())])
-        print("%s: %d pets, %d files, %.1f MB" % (args.out, len(pets), len(files), os.path.getsize(args.out) / 1e6))
+        print("%s: %d pets and mounts, %d files, %.1f MB" % (args.out, len(pets), len(files), os.path.getsize(args.out) / 1e6))
         if args.sql:
             write_sql(args.sql, pets, new_spells, args.patch_z, tmp)
 
