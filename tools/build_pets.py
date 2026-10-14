@@ -9,8 +9,8 @@ The models are a separate patch (patch-Z.MPQ), built first from this repo's pack
 wow-mod-retail-creatures' tools/build_patch.py. This tool does the rest.
 
 --patch-w is the patch that carries the realm's Spell.dbc, Item.dbc, SkillLineAbility.dbc and
-ItemDisplayInfo.dbc (ours is patch-W.MPQ). A patch MPQ replaces whole files, so the new rows go
-into its copies; every other file in it is copied unchanged. Per pet or mount it gains:
+ItemDisplayInfo.dbc (patch-W.MPQ in the example above). A patch MPQ replaces whole files, so
+the new rows go into its copies; every other file in it is copied unchanged. Per pet or mount it gains:
 
 - Spell.dbc: the summon spell, a copy of Bombay Cat (10673) for a pet and of Amani War Bear
   (43688) for a mount, with the row's creature, name and icon.
@@ -563,7 +563,7 @@ def write_sql(path, pets, vendors, new_spells, patch_z, tmp):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--patch-w", required=True, help="the realm's live spell patch (patch-W.MPQ)")
+    ap.add_argument("--patch-w", required=True, help="your realm's live spell patch (e.g. patch-W.MPQ)")
     ap.add_argument("--patch-z", required=True, help="the built model patch (patch-Z.MPQ)")
     ap.add_argument("--client", required=True, help="the base client folder (has Data/<locale>/)")
     ap.add_argument("--locale", default="enUS")
