@@ -70,11 +70,11 @@ Category: Collections
 - AzerothCore wotlk (master) with the WotLK 3.3.5a (12340) client.
 - **Two client patches for every player.** Each pet or mount is a new model, a new spell and a new
   item, none of which the 3.3.5a client knows:
-  - the model patch (ours is `patch-Z.MPQ`): the models, their textures, and
+  - the model patch (`patch-Z.MPQ` in the examples below): the models, their textures, and
     `CreatureDisplayInfo.dbc` / `CreatureModelData.dbc` with their rows;
-  - the spell patch (ours is `patch-W.MPQ`, which other modules share): `Spell.dbc`,
-    `SkillLineAbility.dbc`, `Item.dbc`, `ItemDisplayInfo.dbc` and `SpellIcon.dbc` with their
-    rows, and the icons.
+  - the spell patch (`patch-W.MPQ` in the examples; if another patch already ships your
+    `Spell.dbc`, use that one): `Spell.dbc`, `SkillLineAbility.dbc`, `Item.dbc`,
+    `ItemDisplayInfo.dbc` and `SpellIcon.dbc` with their rows, and the icons.
 
   A player without the model patch sees nothing where a pet stands, and a rider floating without
   a mount. A player without the spell patch can't learn or summon one.
@@ -115,8 +115,9 @@ python3 wow-mod-retail-creatures/tools/build_patch.py --pack mod-retail-pets \
 `dbc/` holds the `CreatureDisplayInfo.dbc` and `CreatureModelData.dbc` your players already have,
 plus the client's `AnimationData.dbc`. A patch replaces whole files, so if another patch ships
 those two DBCs, build on the copies from the last one to load and give this patch a later letter.
-On our realm that is `patch-V.MPQ` (the shaman totems): **rebuild patch-Z whenever patch-R or
-patch-V changes**.
+For example, if you also run the wow-mod-retail-druid-forms and wow-mod-retail-shaman-totems
+packs, their patches ship those DBCs: build on the one that loads last, and **rebuild the model
+patch whenever one of them changes**.
 
 Leave out the builder's `--sql`: that file is for mod-transmog-plus. The next tool writes this
 module's SQL.
