@@ -4,8 +4,8 @@
 
 -- The pets and the mounts' creatures.
 DELETE FROM `creature` WHERE `guid` IN (9502090);
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502090);
-DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502090);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502090);
+DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502090);
 INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `movementId`, `flags_extra`) VALUES
 (9502000, 'Red Panda', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
 (9502001, 'Red Panda Backpacker', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
@@ -21,7 +21,8 @@ INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `facti
 (9502011, 'Great Azure Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
 (9502012, 'Great Ashen Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
 (9502013, 'Great Crimson Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
-(9502014, 'Great Violet Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0);
+(9502014, 'Great Violet Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
+(9502015, 'Whoofle Bramblewing', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
 (9502000, 0, 97000, 0.8, 1),
 (9502001, 0, 97001, 0.8, 1),
@@ -37,7 +38,8 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 (9502011, 0, 97011, 1, 1),
 (9502012, 0, 97012, 1, 1),
 (9502013, 0, 97013, 1, 1),
-(9502014, 0, 97014, 1, 1);
+(9502014, 0, 97014, 1, 1),
+(9502015, 0, 97015, 1, 1);
 
 -- Who sells them: friendly to everyone, can't be attacked, a vendor (with a greeting first, if it has one).
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES
@@ -65,7 +67,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 (14, 9502090, 9502091, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Nari Rustpaw greets a player who has cleared progression phase 8');
 
 -- Their summon spells (client: Spell.dbc in the spell patch), on the Companions and Mounts skill lines.
-DELETE FROM `spell_dbc` WHERE `ID` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
+DELETE FROM `spell_dbc` WHERE `ID` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214, 90215);
 INSERT INTO `spell_dbc` VALUES
 (90200, 0, 0, 0, 262416, 0, 0, 536870912, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 28, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 9502000, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 353, 0, 90200, 0, 0, 'Red Panda', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712188, 'Right Click to summon and dismiss your red panda.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712188, 0, 133, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
 (90201, 0, 0, 0, 262416, 0, 0, 536870912, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 28, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 9502001, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 353, 0, 90201, 0, 0, 'Red Panda Backpacker', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712188, 'Right Click to call or say goodbye to your red panda backpacker.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712188, 0, 133, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -81,8 +83,9 @@ INSERT INTO `spell_dbc` VALUES
 (90211, 0, 0, 21, 269844752, 0, 0, 536870912, 0, 0, 131072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 1, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 6, 6, 0, 0, 1, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 78, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9502011, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9886, 0, 90211, 0, 0, 'Great Azure Panda', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712172, 'Summons and dismisses a rideable Great Azure Panda.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
 (90212, 0, 0, 21, 269844752, 0, 0, 536870912, 0, 0, 131072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 1, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 6, 6, 0, 0, 1, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 78, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9502012, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9886, 0, 90212, 0, 0, 'Great Ashen Panda', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712172, 'Summons and dismisses a rideable Great Ashen Panda.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
 (90213, 0, 0, 21, 269844752, 0, 0, 536870912, 0, 0, 131072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 1, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 6, 6, 0, 0, 1, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 78, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9502013, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9886, 0, 90213, 0, 0, 'Great Crimson Panda', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712172, 'Summons and dismisses a rideable Great Crimson Panda.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
-(90214, 0, 0, 21, 269844752, 0, 0, 536870912, 0, 0, 131072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 1, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 6, 6, 0, 0, 1, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 78, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9502014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9886, 0, 90214, 0, 0, 'Great Violet Panda', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712172, 'Summons and dismisses a rideable Great Violet Panda.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-DELETE FROM `skilllineability_dbc` WHERE `ID` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
+(90214, 0, 0, 21, 269844752, 0, 0, 536870912, 0, 0, 131072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 1, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 6, 6, 0, 0, 1, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 78, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9502014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9886, 0, 90214, 0, 0, 'Great Violet Panda', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712172, 'Summons and dismisses a rideable Great Violet Panda.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+(90215, 0, 0, 21, 269844752, 0, 0, 536870912, 0, 0, 131072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 31, 0, 0, 0, 101, 0, 0, 0, 1, 21, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 6, 6, 0, 0, 1, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 78, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9502015, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9886, 0, 90215, 0, 0, 'Whoofle Bramblewing', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712172, 'Summons and dismisses a rideable Whoofle Bramblewing. It flies where flying mounts can.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 16712190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+DELETE FROM `skilllineability_dbc` WHERE `ID` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214, 90215);
 INSERT INTO `skilllineability_dbc` (`ID`, `SkillLine`, `Spell`, `RaceMask`, `ClassMask`, `ExcludeRace`, `ExcludeClass`, `MinSkillLineRank`, `SupercededBySpell`, `AcquireMethod`, `TrivialSkillLineRankHigh`, `TrivialSkillLineRankLow`, `CharacterPoints_1`, `CharacterPoints_2`) VALUES
 (90200, 778, 90200, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
 (90201, 778, 90201, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
@@ -98,11 +101,29 @@ INSERT INTO `skilllineability_dbc` (`ID`, `SkillLine`, `Spell`, `RaceMask`, `Cla
 (90211, 777, 90211, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
 (90212, 777, 90212, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
 (90213, 777, 90213, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
-(90214, 777, 90214, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
+(90214, 777, 90214, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
+(90215, 777, 90215, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214, 90215);
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
+(90215, 'spell_retail_pets_flyer');
+
+-- The flyers' flight auras (src/RetailPetsFlyer.cpp): server only, the client has no such spells.
+DELETE FROM `spell_dbc` WHERE `ID` IN (90230, 90231);
+INSERT INTO `spell_dbc` (`ID`, `Attributes`, `AttributesEx4`, `CastingTimeIndex`, `ProcChance`, `DurationIndex`, `RangeIndex`, `EquippedItemClass`, `Effect_1`, `EffectDieSides_1`, `EffectBasePoints_1`, `ImplicitTargetA_1`, `EffectAura_1`, `SpellIconID`, `Name_Lang_enUS`, `Name_Lang_Mask`, `NameSubtext_Lang_Mask`, `Description_Lang_Mask`, `AuraDescription_Lang_Mask`, `EffectChainAmplitude_1`, `SchoolMask`, `EffectBonusMultiplier_1`, `EffectBonusMultiplier_2`, `EffectBonusMultiplier_3`) VALUES
+(90230, 16777664, 67108864, 1, 101, 21, 1, -1, 6, 1, 149, 1, 207, 1, 'Retail Pets Flight', 16712190, 16712188, 16712190, 16712188, 1, 1, 1, 1, 1),
+(90231, 16777664, 67108864, 1, 101, 21, 1, -1, 6, 1, 279, 1, 207, 1, 'Retail Pets Swift Flight', 16712190, 16712188, 16712190, 16712188, 1, 1, 1, 1, 1);
+
+-- Achievements for learning a mount or pet: the core awards them (criteria type 34, learn spell).
+DELETE FROM `achievement_criteria_dbc` WHERE `ID` BETWEEN 19200 AND 19229;
+DELETE FROM `achievement_dbc` WHERE `ID` BETWEEN 9200 AND 9229;
+INSERT INTO `achievement_dbc` (`ID`, `Faction`, `Instance_Id`, `Supercedes`, `Title_Lang_enUS`, `Title_Lang_Mask`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Category`, `Points`, `Ui_Order`, `Flags`, `IconID`, `Reward_Lang_Mask`, `Minimum_Criteria`, `Shares_Criteria`) VALUES
+(9215, -1, -1, 0, 'Owl Be Seeing You', 16712190, 'Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.', 16712190, 92, 10, 1015, 0, 90215, 16712188, 0, 0);
+INSERT INTO `achievement_criteria_dbc` (`ID`, `Achievement_Id`, `Type`, `Asset_Id`, `Quantity`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Flags`, `Ui_Order`) VALUES
+(19215, 9215, 34, 90215, 0, 'Whoofle Bramblewing', 16712190, 2, 1);
 
 -- The items that teach them, and who sells those.
-DELETE FROM `npc_vendor` WHERE `item` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
-DELETE FROM `item_template` WHERE `entry` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
+DELETE FROM `npc_vendor` WHERE `item` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214, 90215);
+DELETE FROM `item_template` WHERE `entry` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214, 90215);
 INSERT INTO `item_template` (`entry`, `class`, `subclass`, `name`, `displayid`, `Quality`, `Flags`, `BuyPrice`, `SellPrice`, `ItemLevel`, `RequiredSkill`, `RequiredSkillRank`, `delay`, `spellid_1`, `spellcharges_1`, `spellid_2`, `spelltrigger_2`, `bonding`, `description`, `Material`, `BagFamily`) VALUES
 (90200, 15, 2, 'Red Panda', 90200, 3, 64, 10000, 2500, 20, 0, 0, 0, 55884, -1, 90200, 6, 0, 'Teaches you how to summon this companion.', -1, 4096),
 (90201, 15, 2, 'Red Panda Backpacker', 90201, 3, 64, 10000, 2500, 20, 0, 0, 0, 55884, -1, 90201, 6, 0, 'Teaches you how to summon this companion.', -1, 4096),
@@ -118,7 +139,8 @@ INSERT INTO `item_template` (`entry`, `class`, `subclass`, `name`, `displayid`, 
 (90211, 15, 5, 'Great Azure Panda', 90211, 4, 0, 100000, 25000, 20, 762, 75, 0, 55884, -1, 90211, 6, 1, 'Teaches you how to summon this mount.', -1, 0),
 (90212, 15, 5, 'Great Ashen Panda', 90212, 4, 0, 100000, 25000, 20, 762, 75, 0, 55884, -1, 90212, 6, 1, 'Teaches you how to summon this mount.', -1, 0),
 (90213, 15, 5, 'Great Crimson Panda', 90213, 4, 0, 100000, 25000, 20, 762, 75, 0, 55884, -1, 90213, 6, 1, 'Teaches you how to summon this mount.', -1, 0),
-(90214, 15, 5, 'Great Violet Panda', 90214, 4, 0, 100000, 25000, 20, 762, 75, 0, 55884, -1, 90214, 6, 1, 'Teaches you how to summon this mount.', -1, 0);
+(90214, 15, 5, 'Great Violet Panda', 90214, 4, 0, 100000, 25000, 20, 762, 75, 0, 55884, -1, 90214, 6, 1, 'Teaches you how to summon this mount.', -1, 0),
+(90215, 15, 5, 'Whoofle Bramblewing', 90215, 4, 0, 0, 0, 20, 762, 75, 0, 55884, -1, 90215, 6, 1, 'Teaches you how to summon this mount.', -1, 0);
 INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES
 (9502090, 1, 90200, 0, 0, 0),
 (9502090, 2, 90201, 0, 0, 0),
@@ -135,7 +157,7 @@ INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `Exte
 (9502090, 13, 90212, 0, 0, 0),
 (9502090, 14, 90213, 0, 0, 0),
 (9502090, 15, 90214, 0, 0, 0);
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `SourceEntry` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214);
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `SourceEntry` IN (90200, 90201, 90202, 90203, 90204, 90205, 90206, 90207, 90208, 90209, 90210, 90211, 90212, 90213, 90214, 90215);
 -- A vendor shows and sells an item only to a player who has cleared its progression phase
 -- (mod-individual-progression's hidden quest 66000 + phase).
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES
@@ -154,7 +176,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 (23, 9502090, 90214, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Great Violet Panda is sold once the player has cleared progression phase 8');
 
 -- The model patch's CreatureDisplayInfo and CreatureModelData rows, for the server's DBC stores.
-DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014);
+DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015);
 INSERT INTO `creaturedisplayinfo_dbc` (`ID`, `ModelID`, `SoundID`, `ExtendedDisplayInfoID`, `CreatureModelScale`, `CreatureModelAlpha`, `TextureVariation_1`, `TextureVariation_2`, `TextureVariation_3`, `PortraitTextureName`, `BloodLevel`, `BloodID`, `NPCSoundID`, `ParticleColorID`, `CreatureGeosetData`, `ObjectEffectPackageID`) VALUES
 (97000, 97000, 0, 0, 1, 255, 'T774110', '', '', '', 0, 0, 163, 0, 0, 0),
 (97001, 97001, 0, 0, 0.75, 255, 'T6310493', '', '', '', 0, 0, 163, 0, 0, 0),
@@ -170,13 +192,15 @@ INSERT INTO `creaturedisplayinfo_dbc` (`ID`, `ModelID`, `SoundID`, `ExtendedDisp
 (97011, 97002, 0, 0, 1.2, 255, 'T6256779', 'T6256791', 'T6256785', '', 1, 0, 0, 0, 0, 0),
 (97012, 97002, 0, 0, 1.2, 255, 'T6256780', 'T6256792', 'T6256786', '', 1, 0, 0, 0, 0, 0),
 (97013, 97002, 0, 0, 1.2, 255, 'T6256782', 'T6256794', 'T6256788', '', 1, 0, 0, 0, 0, 0),
-(97014, 97002, 0, 0, 1.2, 255, 'T6256784', 'T6256795', 'T6256790', '', 1, 0, 0, 0, 0, 0);
-DELETE FROM `creaturemodeldata_dbc` WHERE `ID` IN (97000, 97001, 97002);
+(97014, 97002, 0, 0, 1.2, 255, 'T6256784', 'T6256795', 'T6256790', '', 1, 0, 0, 0, 0, 0),
+(97015, 97003, 0, 0, 1, 255, '', '', '', '', 2, 0, 0, 0, 0, 0);
+DELETE FROM `creaturemodeldata_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003);
 INSERT INTO `creaturemodeldata_dbc` (`ID`, `Flags`, `ModelName`, `SizeClass`, `ModelScale`, `BloodID`, `FootprintTextureID`, `FootprintTextureLength`, `FootprintTextureWidth`, `FootprintParticleScale`, `FoleyMaterialID`, `FootstepShakeSize`, `DeathThudShakeSize`, `SoundID`, `CollisionWidth`, `CollisionHeight`, `MountHeight`, `GeoBoxMinX`, `GeoBoxMinY`, `GeoBoxMinZ`, `GeoBoxMaxX`, `GeoBoxMaxY`, `GeoBoxMaxZ`, `WorldEffectScale`, `AttachedEffectScale`, `MissileCollisionRadius`, `MissileCollisionPush`, `MissileCollisionRaise`) VALUES
 (97000, 0, 'Creature\\RetailPets\\RedPanda\\RedPanda.mdx', 0, 1, 1, 7, 10, 6, 1, 0, 0, 0, 1469, 0.611111, 2.03128, 0.462593, -1.21839, -0.259978, -0.093385, 0.495662, 0.276689, 0.695761, 1, 1, 0, 0, 0),
 (97001, 0, 'Creature\\RetailPets\\RedPandaBackpacker\\RedPandaBackpacker.mdx', 0, 1, 1, 7, 10, 6, 1, 0, 0, 0, 1469, 0.611111, 2.03128, 0, -1.02305, -0.533998, -0.0407019, 0.33661, 0.532239, 1.4624, 1, 1, 0, 0, 0),
-(97002, 0, 'Creature\\RetailPets\\RedPandaMount\\RedPandaMount.mdx', 1, 1, -1, 7, 18, 12, 2, 0, 0, 0, 2499, 0.611111, 2.03128, 2.11116, -4.53993, -1.04993, -0.0723111, 1.51247, 1.05826, 3.35619, 1, 1, 0, 0, 0);
-DELETE FROM `creature_model_info` WHERE `DisplayID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014);
+(97002, 0, 'Creature\\RetailPets\\RedPandaMount\\RedPandaMount.mdx', 1, 1, -1, 7, 18, 12, 2, 0, 0, 0, 2499, 0.611111, 2.03128, 2.11116, -4.53993, -1.04993, -0.0723111, 1.51247, 1.05826, 3.35619, 1, 1, 0, 0, 0),
+(97003, 0, 'Creature\\RetailPets\\PigmyOwlMount\\PigmyOwlMount.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.61186, -2.82588, -1.10715, -0.489358, 1.14963, 1.04463, 2.12517, 1, 1, 0, 0, 0);
+DELETE FROM `creature_model_info` WHERE `DisplayID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015);
 INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES
 (97000, 0.25, 0.5, 2, 0),
 (97001, 0.25, 0.5, 2, 0),
@@ -192,4 +216,28 @@ INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`,
 (97011, 1.45, 1.5, 2, 0),
 (97012, 1.45, 1.5, 2, 0),
 (97013, 1.45, 1.5, 2, 0),
-(97014, 1.45, 1.5, 2, 0);
+(97014, 1.45, 1.5, 2, 0),
+(97015, 1.45, 1.5, 2, 0);
+
+-- Druid form looks for mod-transmog-plus: a character who knows the mount has the form.
+-- That module owns the two tables; they are made here too so this file applies first.
+CREATE TABLE IF NOT EXISTS `mod_transmog_plus_forms` (
+    `DisplayId` int(10) unsigned NOT NULL COMMENT 'CreatureDisplayInfo id from the client patch',
+    `Form` varchar(16) NOT NULL COMMENT 'bear, cat, travel, aquatic, flight, moonkin or tree',
+    `Name` varchar(80) NOT NULL,
+    `UnlockPhase` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT 'individual progression phase cleared (quest 66000+n); 0 = from the start',
+    `PreviewCreature` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'creature_template entry with this display, for the addon preview',
+    `SortOrder` int(10) unsigned NOT NULL DEFAULT 0,
+    PRIMARY KEY (`DisplayId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `mod_transmog_plus_form_spells` (
+    `DisplayId` int(10) unsigned NOT NULL COMMENT 'mod_transmog_plus_forms look',
+    `SpellId` int(10) unsigned NOT NULL COMMENT 'a character who knows this spell has the look (on top of its UnlockPhase)',
+    PRIMARY KEY (`DisplayId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DELETE FROM `mod_transmog_plus_form_spells` WHERE `DisplayId` BETWEEN 97000 AND 97099;
+DELETE FROM `mod_transmog_plus_forms` WHERE `DisplayId` BETWEEN 97000 AND 97099;
+INSERT INTO `mod_transmog_plus_forms` (`DisplayId`, `Form`, `Name`, `UnlockPhase`, `PreviewCreature`, `SortOrder`) VALUES
+(97015, 'flight', 'Whoofle Bramblewing', 0, 9502015, 100001);
+INSERT INTO `mod_transmog_plus_form_spells` (`DisplayId`, `SpellId`) VALUES
+(97015, 90215);
