@@ -13,7 +13,7 @@ ItemDisplayInfo.dbc (patch-W.MPQ in the example above). A patch MPQ replaces who
 the new rows go into its copies; every other file in it is copied unchanged. Per pet or mount it gains:
 
 - Spell.dbc: the summon spell, a copy of Bombay Cat (10673) for a pet and of Amani War Bear
-  (43688) for a mount, with the row's creature, name and icon.
+  (43688) for a mount or a flyer, with the row's creature, name and icon.
 - SkillLineAbility.dbc: that spell on the Companions or the Mounts skill line, which puts it on
   the Pets or the Mounts tab.
 - Item.dbc and ItemDisplayInfo.dbc: the item that teaches it, with the row's icon.
@@ -28,7 +28,22 @@ mirrored into the SQL, because the server checks creature displays against its o
 
 A row's `vendor` is the creature that sells its item. data/vendors.tsv lists the module's own
 vendors (the SQL makes and spawns those); any other entry is taken to be a creature the server
-already has.
+already has. 0 = no vendor: the item comes some other way (a shop, a reward, a GM).
+
+A `flyer` is a mount that also flies where flying mounts can: a ground mount spell like a
+mount's, bound to the module's script (src/RetailPetsFlyer.cpp), which adds one of two
+server-only flight speed auras by riding skill. The SQL writes those two spells as well.
+
+A row with an `achievement` id gets an achievement for learning its spell: Achievement.dbc and
+Achievement_Criteria.dbc rows in the spell patch (the client's own copies are the base, Reforged
+ships none) and the same rows in the server's achievement_dbc / achievement_criteria_dbc. The
+core awards it by itself (criteria type "learn spell") when the spell is learned, which with
+mod-accountwide-mounts includes every character of the account as it logs in. A character
+that knew the spell before the achievement existed gets it only after a GM sets its
+achievement check (at_login 0x400). Its criteria id is the achievement id + 10000.
+
+A row's `druid_form` (flight, travel, ...) makes its model a druid form look in mod-transmog-plus's
+Forms tab, unlocked for a character that knows the row's spell: buy the mount, get the form.
 
 A row's `tier` is the mod-individual-progression phase its item waits for: the vendor shows and
 sells it only to a player who has cleared that phase (0 = to everyone). The SQL does that with a
@@ -81,12 +96,60 @@ GOSSIP_OPTION_VENDOR, GOSSIP_ICON_VENDOR = 3, 1
 #   creature  (faction, unit_flags, type, movementId, flags_extra) of the creature, from Bombay
 #             Cat and the Amani War Bear mount
 #   model     (BoundingRadius, CombatReach) of its display
+#   script    ScriptName on the summon spell (spell_script_names), or None
 KINDS = {
     "pet": dict(spell=10673, skill=778, subclass=2, item=(64, 0, 0, 0, 4096),
-                creature=(188, 768, 12, 121, 2), model=(0.25, 0.5)),
+                creature=(188, 768, 12, 121, 2), model=(0.25, 0.5), script=None),
     "mount": dict(spell=43688, skill=777, subclass=5, item=(0, SKILL_RIDING, RIDING_APPRENTICE, 1, 0),
-                  creature=(35, 0, 1, 140, 0), model=(1.45, 1.5)),
+                  creature=(35, 0, 1, 140, 0), model=(1.45, 1.5), script=None),
 }
+# A flyer is a mount whose script adds flight where flying mounts can (src/RetailPetsFlyer.cpp).
+KINDS["flyer"] = dict(KINDS["mount"], script="spell_retail_pets_flyer")
+
+# The flyers' flight auras: server-only spells, one "mounted flight speed" effect each (207) on the
+# caster, like every flying mount spell. Passive, hidden, not logged, allowed while mounted
+# (Attributes 0x40|0x80|0x100|0x1000000); only in flying areas (AttributesEx4 0x4000000), so the
+# core keeps them to Outland and Northrend. (id, flight speed, name); the script uses the ids.
+FLIGHT_SPELLS = ((90230, 150, "Retail Pets Flight"), (90231, 280, "Retail Pets Swift Flight"))
+
+# Achievements: General category, 10 points, after the stock mount ones in the category. Ids are
+# 16 bits in the characters database, so they can't follow the spell ids.
+ACHIEVEMENT_BLOCK = (9200, 9229)  # the module's achievement ids; criteria ids are these + 10000
+ACHIEVEMENT_CATEGORY_GENERAL = 92
+ACHIEVEMENT_POINTS = 10
+ACHIEVEMENT_UI_ORDER = 1000
+ACHIEVEMENT_CRITERIA_OFFSET = 10000
+ACHIEVEMENT_CRITERIA_LEARN_SPELL = 34
+CRITERIA_FLAG_HIDDEN = 2  # single criterion: the achievement's own text says it all
+ACHIEVEMENT_FIELDS, CRITERIA_FIELDS = 62, 31
+LANG_MASK, LANG_MASK_EMPTY = 16712190, 16712188
+
+# Druid forms a row's model can be a look for, in mod-transmog-plus's Forms tab.
+DRUID_FORMS = ("bear", "cat", "travel", "aquatic", "flight", "moonkin", "tree")
+# The module's looks come after every look pack's in the tab.
+FORM_SORT_BASE = 100000
+# The module's CreatureDisplayInfo ids: its form looks are the rows in this block.
+DISPLAY_BLOCK = (97000, 97099)
+
+# mod-transmog-plus's own tables (its data/sql/world): keep these the same. The module's SQL makes
+# them too, because the server applies every module's SQL in file name order and this file comes
+# before mod-transmog-plus's.
+FORMS_TABLE = """CREATE TABLE IF NOT EXISTS `mod_transmog_plus_forms` (
+    `DisplayId` int(10) unsigned NOT NULL COMMENT 'CreatureDisplayInfo id from the client patch',
+    `Form` varchar(16) NOT NULL COMMENT 'bear, cat, travel, aquatic, flight, moonkin or tree',
+    `Name` varchar(80) NOT NULL,
+    `UnlockPhase` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT 'individual progression phase cleared (quest 66000+n); 0 = from the start',
+    `PreviewCreature` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'creature_template entry with this display, for the addon preview',
+    `SortOrder` int(10) unsigned NOT NULL DEFAULT 0,
+    PRIMARY KEY (`DisplayId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+"""
+FORM_SPELLS_TABLE = """CREATE TABLE IF NOT EXISTS `mod_transmog_plus_form_spells` (
+    `DisplayId` int(10) unsigned NOT NULL COMMENT 'mod_transmog_plus_forms look',
+    `SpellId` int(10) unsigned NOT NULL COMMENT 'a character who knows this spell has the look (on top of its UnlockPhase)',
+    PRIMARY KEY (`DisplayId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+"""
 
 SPELL_FIELDS = 234
 F_EFFECT_MISC, F_ICON, F_ACTIVE_ICON, F_NAME, F_DESCRIPTION = 110, 133, 134, 136, 170
@@ -277,6 +340,19 @@ def load_pets(path):
         if p["form"] not in KINDS:
             sys.exit("%s: %s is a %s, not one of %s" % (path, p["name"], p["form"], ", ".join(KINDS)))
         p["kind"] = KINDS[p["form"]]
+        p["druid_form"] = p.get("druid_form", "").strip()
+        p["achievement"] = int(p.get("achievement") or 0)
+        if p["achievement"]:
+            if not 4825 <= p["achievement"] <= 65535 - ACHIEVEMENT_CRITERIA_OFFSET:
+                sys.exit("%s: %s: achievement ids are 4825-%d (16 bits, past the stock ones)" % (
+                    path, p["name"], 65535 - ACHIEVEMENT_CRITERIA_OFFSET))
+            if not p.get("achievement_name") or not p.get("achievement_text"):
+                sys.exit("%s: %s has an achievement and no achievement_name or achievement_text" % (path, p["name"]))
+        if p["druid_form"] and p["druid_form"] not in DRUID_FORMS:
+            sys.exit("%s: %s has druid_form %s, not one of %s" % (path, p["name"], p["druid_form"], ", ".join(DRUID_FORMS)))
+    achievements = [p["achievement"] for p in pets if p["achievement"]]
+    if len(set(achievements)) != len(achievements):
+        sys.exit("%s: two rows share an achievement id" % path)
     for k in ("display", "creature", "spell", "item"):
         if len({p[k] for p in pets}) != len(pets):
             sys.exit("%s: two pets share a %s id" % (path, k))
@@ -377,12 +453,72 @@ def patch_w(files, pets, args, tmp):
         upsert(icons, [p["spell"], add_string(icon_str, "Interface\\Icons\\" + p["icon"])])
         files["Interface\\Icons\\%s.blp" % p["icon"]] = casc_path(args.cache, p["icon_fdid"])
 
+    add_achievements(files, pets, args, tmp)
+
     write_dbc(files[dbc("Spell")], spells, spell_str, fields)
     write_dbc(files[dbc("SkillLineAbility")], abilities, ability_str, ability_fields)
     write_dbc(files[dbc("Item")], items, item_str, item_fields)
     write_dbc(files[dbc("ItemDisplayInfo")], displays, display_str, display_fields)
     write_dbc(files[dbc("SpellIcon")], icons, icon_str, icon_fields)
     return new_spells
+
+
+def add_achievements(files, pets, args, tmp):
+    """Achievement.dbc and Achievement_Criteria.dbc rows for the rows with an achievement."""
+    rows = [p for p in pets if p["achievement"]]
+    if not rows:
+        return
+    tables = {}
+    for table, width in (("Achievement", ACHIEVEMENT_FIELDS), ("Achievement_Criteria", CRITERIA_FIELDS)):
+        name = "DBFilesClient\\%s.dbc" % table
+        if name not in files:
+            local = os.path.join(tmp, table + ".dbc")
+            source = client_file(args.client, args.locale, name, local)
+            files[name] = local
+            print("%s.dbc: from %s" % (table, os.path.basename(source)))
+        table_rows, strings, fields = read_dbc(files[name])
+        if fields != width:
+            sys.exit("%s.dbc has %d fields, not %d" % (table, fields, width))
+        tables[table] = (table_rows, strings, fields)
+    achievements, ach_str, _ = tables["Achievement"]
+    criteria, crit_str, _ = tables["Achievement_Criteria"]
+
+    for p in rows:
+        criterion = p["achievement"] + ACHIEVEMENT_CRITERIA_OFFSET
+        old = next((r for r in achievements if r[0] == p["achievement"]), None)
+        if old and string_at(ach_str, old[4]) != p["achievement_name"]:
+            sys.exit("Achievement.dbc row %d is taken: %s" % (p["achievement"], string_at(ach_str, old[4])))
+        old = next((r for r in criteria if r[0] == criterion), None)
+        if old and old[1] != p["achievement"]:
+            sys.exit("Achievement_Criteria.dbc row %d is taken" % criterion)
+
+        row = [0] * ACHIEVEMENT_FIELDS
+        row[0] = p["achievement"]
+        row[1] = row[2] = UNSET                          # either faction, any map
+        row[4] = add_string(ach_str, p["achievement_name"])
+        row[20] = LANG_MASK
+        row[21] = add_string(ach_str, p["achievement_text"])
+        row[37] = LANG_MASK
+        row[38] = ACHIEVEMENT_CATEGORY_GENERAL
+        row[39] = ACHIEVEMENT_POINTS
+        row[40] = ACHIEVEMENT_UI_ORDER + pets.index(p)
+        row[42] = p["spell"]                             # SpellIcon: the spell's own icon
+        row[59] = LANG_MASK_EMPTY                        # no reward text
+        upsert(achievements, row)
+
+        row = [0] * CRITERIA_FIELDS
+        row[0] = criterion
+        row[1] = p["achievement"]
+        row[2] = ACHIEVEMENT_CRITERIA_LEARN_SPELL
+        row[3] = p["spell"]
+        row[9] = add_string(crit_str, p["name"])
+        row[25] = LANG_MASK
+        row[26] = CRITERIA_FLAG_HIDDEN
+        row[30] = 1                                      # Ui_Order
+        upsert(criteria, row)
+
+    for table, (table_rows, strings, fields) in tables.items():
+        write_dbc(files["DBFilesClient\\%s.dbc" % table], table_rows, strings, fields)
 
 
 # --- SQL ---------------------------------------------------------------------------------------
@@ -507,7 +643,21 @@ def write_sql(path, pets, vendors, new_spells, patch_z, tmp):
         f.write("DELETE FROM `skilllineability_dbc` WHERE `ID` IN (%s);\n" % id_list(spells))
         f.write("INSERT INTO `skilllineability_dbc` (`ID`, `SkillLine`, `Spell`, `RaceMask`, `ClassMask`, `ExcludeRace`, `ExcludeClass`, `MinSkillLineRank`, `SupercededBySpell`, `AcquireMethod`, `TrivialSkillLineRankHigh`, `TrivialSkillLineRankLow`, `CharacterPoints_1`, `CharacterPoints_2`) VALUES\n")
         f.write(",\n".join("(%d, %d, %d, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0)" % (p["spell"], p["kind"]["skill"], p["spell"])
-                           for p in pets) + ";\n\n")
+                           for p in pets) + ";\n")
+        f.write("DELETE FROM `spell_script_names` WHERE `spell_id` IN (%s);\n" % id_list(spells))
+        scripted = [p for p in pets if p["kind"]["script"]]
+        if scripted:
+            f.write("INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES\n")
+            f.write(",\n".join("(%d, %s)" % (p["spell"], sql_str(p["kind"]["script"])) for p in scripted) + ";\n")
+        f.write("\n")
+
+        f.write("-- The flyers' flight auras (src/RetailPetsFlyer.cpp): server only, the client has no such spells.\n")
+        f.write("DELETE FROM `spell_dbc` WHERE `ID` IN (%s);\n" % id_list(s for s, _v, _n in FLIGHT_SPELLS))
+        f.write("INSERT INTO `spell_dbc` (`ID`, `Attributes`, `AttributesEx4`, `CastingTimeIndex`, `ProcChance`, `DurationIndex`, `RangeIndex`, `EquippedItemClass`, `Effect_1`, `EffectDieSides_1`, `EffectBasePoints_1`, `ImplicitTargetA_1`, `EffectAura_1`, `SpellIconID`, `Name_Lang_enUS`, `Name_Lang_Mask`, `NameSubtext_Lang_Mask`, `Description_Lang_Mask`, `AuraDescription_Lang_Mask`, `EffectChainAmplitude_1`, `SchoolMask`, `EffectBonusMultiplier_1`, `EffectBonusMultiplier_2`, `EffectBonusMultiplier_3`) VALUES\n")
+        f.write(",\n".join("(%d, 16777664, 67108864, 1, 101, 21, 1, -1, 6, 1, %d, 1, 207, 1, %s, 16712190, 16712188, 16712190, 16712188, 1, 1, 1, 1, 1)" % (
+            s, speed - 1, sql_str(name)) for s, speed, name in FLIGHT_SPELLS) + ";\n\n")
+
+        write_achievements(f, pets)
 
         f.write("-- The items that teach them, and who sells those.\n")
         f.write("DELETE FROM `npc_vendor` WHERE `item` IN (%s);\n" % id_list(items))
@@ -519,18 +669,20 @@ def write_sql(path, pets, vendors, new_spells, patch_z, tmp):
             lines.append("(%d, %d, %d, %s, %d, %d, %d, %d, %d, 20, %d, %d, 0, %d, -1, %d, %d, %d, %s, -1, %d)" % (
                 p["item"], ITEM_CLASS_MISC, p["kind"]["subclass"], sql_str(p["name"]), p["item"], p["quality"], flags,
                 p["price"], p["price"] // 4, skill, rank, SPELL_LEARNING, p["spell"], ITEM_SPELLTRIGGER_LEARN, bonding,
-                sql_str("Teaches you how to summon this %s." % ("mount" if p["form"] == "mount" else "companion")), bag))
+                sql_str("Teaches you how to summon this %s." % ("companion" if p["form"] == "pet" else "mount")), bag))
         f.write(",\n".join(lines) + ";\n")
-        f.write("INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES\n")
-        slots = {}
-        lines = []
-        for p in pets:  # a vendor lists its items in the order of the pet list
-            slots[p["vendor"]] = slots.get(p["vendor"], 0) + 1
-            lines.append("(%d, %d, %d, 0, 0, 0)" % (p["vendor"], slots[p["vendor"]], p["item"]))
-        f.write(",\n".join(lines) + ";\n")
+        sold = [p for p in pets if p["vendor"]]  # vendor 0: the item comes some other way
+        if sold:
+            f.write("INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES\n")
+            slots = {}
+            lines = []
+            for p in sold:  # a vendor lists its items in the order of the pet list
+                slots[p["vendor"]] = slots.get(p["vendor"], 0) + 1
+                lines.append("(%d, %d, %d, 0, 0, 0)" % (p["vendor"], slots[p["vendor"]], p["item"]))
+            f.write(",\n".join(lines) + ";\n")
         f.write("DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = %d AND `SourceEntry` IN (%s);\n" % (
             CONDITION_SOURCE_NPC_VENDOR, id_list(items)))
-        gated = [p for p in pets if p["tier"]]
+        gated = [p for p in sold if p["tier"]]
         if gated:
             f.write("-- A vendor shows and sells an item only to a player who has cleared its progression phase\n")
             f.write("-- (mod-individual-progression's hidden quest 66000 + phase).\n")
@@ -558,7 +710,53 @@ def write_sql(path, pets, vendors, new_spells, patch_z, tmp):
         f.write("DELETE FROM `creature_model_info` WHERE `DisplayID` IN (%s);\n" % id_list(displays))
         f.write("INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES\n")
         f.write(",\n".join("(%d, %g, %g, 2, 0)" % (p["display"], *p["kind"]["model"]) for p in pets) + ";\n")
+        write_forms(f, pets)
     print("wrote", path)
+
+
+def write_achievements(f, pets):
+    """The achievements for learning a spell, for the server's DBC stores (the client has the same
+    rows in the spell patch)."""
+    rows = [p for p in pets if p["achievement"]]
+    first, last = ACHIEVEMENT_BLOCK
+    f.write("-- Achievements for learning a mount or pet: the core awards them (criteria type 34, learn spell).\n")
+    f.write("DELETE FROM `achievement_criteria_dbc` WHERE `ID` BETWEEN %d AND %d;\n" % (
+        first + ACHIEVEMENT_CRITERIA_OFFSET, last + ACHIEVEMENT_CRITERIA_OFFSET))
+    f.write("DELETE FROM `achievement_dbc` WHERE `ID` BETWEEN %d AND %d;\n" % (first, last))
+    if rows:
+        if any(not first <= p["achievement"] <= last for p in rows):
+            sys.exit("achievement ids outside the module's block %d-%d" % (first, last))
+        f.write("INSERT INTO `achievement_dbc` (`ID`, `Faction`, `Instance_Id`, `Supercedes`, `Title_Lang_enUS`, `Title_Lang_Mask`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Category`, `Points`, `Ui_Order`, `Flags`, `IconID`, `Reward_Lang_Mask`, `Minimum_Criteria`, `Shares_Criteria`) VALUES\n")
+        f.write(",\n".join("(%d, -1, -1, 0, %s, %d, %s, %d, %d, %d, %d, 0, %d, %d, 0, 0)" % (
+            p["achievement"], sql_str(p["achievement_name"]), LANG_MASK, sql_str(p["achievement_text"]), LANG_MASK,
+            ACHIEVEMENT_CATEGORY_GENERAL, ACHIEVEMENT_POINTS, ACHIEVEMENT_UI_ORDER + pets.index(p), p["spell"],
+            LANG_MASK_EMPTY) for p in rows) + ";\n")
+        f.write("INSERT INTO `achievement_criteria_dbc` (`ID`, `Achievement_Id`, `Type`, `Asset_Id`, `Quantity`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Flags`, `Ui_Order`) VALUES\n")
+        f.write(",\n".join("(%d, %d, %d, %d, 0, %s, %d, %d, 1)" % (
+            p["achievement"] + ACHIEVEMENT_CRITERIA_OFFSET, p["achievement"], ACHIEVEMENT_CRITERIA_LEARN_SPELL,
+            p["spell"], sql_str(p["name"]), LANG_MASK, CRITERIA_FLAG_HIDDEN) for p in rows) + ";\n")
+    f.write("\n")
+
+
+def write_forms(f, pets):
+    """The druid form looks: a row's model in mod-transmog-plus's Forms tab, previewed through the
+    row's own creature and unlocked by knowing the row's spell."""
+    looks = [p for p in pets if p["druid_form"]]
+    first, last = DISPLAY_BLOCK
+    f.write("\n-- Druid form looks for mod-transmog-plus: a character who knows the mount has the form.\n")
+    f.write("-- That module owns the two tables; they are made here too so this file applies first.\n")
+    f.write(FORMS_TABLE)
+    f.write(FORM_SPELLS_TABLE)
+    f.write("DELETE FROM `mod_transmog_plus_form_spells` WHERE `DisplayId` BETWEEN %d AND %d;\n" % (first, last))
+    f.write("DELETE FROM `mod_transmog_plus_forms` WHERE `DisplayId` BETWEEN %d AND %d;\n" % (first, last))
+    if not looks:
+        return
+    f.write("INSERT INTO `mod_transmog_plus_forms` (`DisplayId`, `Form`, `Name`, `UnlockPhase`, `PreviewCreature`, `SortOrder`) VALUES\n")
+    f.write(",\n".join("(%d, %s, %s, %d, %d, %d)" % (
+        p["display"], sql_str(p["druid_form"]), sql_str(p["name"]), p["tier"], p["creature"], FORM_SORT_BASE + i + 1)
+        for i, p in enumerate(looks)) + ";\n")
+    f.write("INSERT INTO `mod_transmog_plus_form_spells` (`DisplayId`, `SpellId`) VALUES\n")
+    f.write(",\n".join("(%d, %d)" % (p["display"], p["spell"]) for p in looks) + ";\n")
 
 
 def main():

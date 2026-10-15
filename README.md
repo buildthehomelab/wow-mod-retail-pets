@@ -2,8 +2,8 @@
 
 Companion (non-combat) pets and mounts from later expansions for an
 [AzerothCore](https://www.azerothcore.org/) (WotLK 3.3.5a) server, with their retail models
-converted for the 3.3.5a client. So far they are all red pandas, sold by one of their own:
-**Nari Rustpaw**, a red panda breeder on the Booty Bay boardwalk.
+converted for the 3.3.5a client. Most are red pandas, sold by one of their own: **Nari
+Rustpaw**, a red panda breeder on the Booty Bay boardwalk.
 
 | Companions (1 gold each) | Looks like |
 |---|---|
@@ -14,6 +14,14 @@ converted for the 3.3.5a client. So far they are all red pandas, sold by one of 
 |---|---|
 | **Great Red Panda**, **Great Azure**, **Ashen**, **Crimson** and **Violet Panda** | A red panda big enough to ride, carrying a chair and a tea set, in five colours |
 
+| Not sold by Nari | Looks like |
+|---|---|
+| **Whoofle Bramblewing** | A plump little owl with a warm glow, retail's shop mount. A mount that flies, a druid's Flight Form look, and the achievement **Owl Be Seeing You** |
+
+The Whoofle Bramblewing item has no vendor: hand it out some other way, such as a shop (the
+launcher shop of [mod-boss-coins](https://github.com/buildthehomelab/wow-mod-boss-coins) has it
+for free), a reward or a GM's `.additem 90215`.
+
 Each is learned from an item and shows up on the Pets or the Mounts tab of the character window,
 like any stock companion or mount. They keep their retail animations: the Backpacker has 149 of
 them, including sitting, sleeping, eating and dancing.
@@ -22,6 +30,23 @@ The mounts are ground mounts that ask for Apprentice Riding and no level. Their 
 a stock 100% mount, so they are epic-speed mounts unless the server scales mount speed itself
 (such as [mod-mount-scaling](https://github.com/buildthehomelab/wow-mod-mount-scaling), which
 treats them like every other ground mount).
+
+Whoofle Bramblewing is a **flyer**, like retail's mounts: the same ground mount, and once its
+rider has Expert Riding (225) it also flies, at +150%, or +280% with Artisan Riding (300), wherever
+a stock flying mount can (Outland, and Northrend with Cold Weather Flying). The module's script
+(`src/RetailPetsFlyer.cpp`) gives the rider one of two server-only flight auras, 90230 or 90231,
+while the mount is up and the place allows it; the core turns flying on and off from them. A
+server that scales flying speed (mod-mount-scaling) scales those too.
+
+**Mount and form.** With [mod-transmog-plus](https://github.com/buildthehomelab/wow-mod-transmog-plus)
+(1.12.0 or later), the owl is also a Flight Form look in its Forms tab: a druid who knows the
+mount has the look, and gets a chat line when they learn it. Druids who don't see it locked,
+with what it comes with.
+
+**Achievement.** Learning the owl earns **Owl Be Seeing You** (General, 10 points). With
+mod-accountwide-mounts, the account's other characters learn the mount, and earn it, as they
+log in. It is an Achievement.dbc row in the spell patch, the same row in `achievement_dbc`, and
+one "learn spell" criterion; the core awards it by itself.
 
 ## Progression
 
@@ -74,7 +99,8 @@ Category: Collections
     `CreatureDisplayInfo.dbc` / `CreatureModelData.dbc` with their rows;
   - the spell patch (`patch-W.MPQ` in the examples; if another patch already ships your
     `Spell.dbc`, use that one): `Spell.dbc`, `SkillLineAbility.dbc`, `Item.dbc`,
-    `ItemDisplayInfo.dbc` and `SpellIcon.dbc` with their rows, and the icons.
+    `ItemDisplayInfo.dbc` and `SpellIcon.dbc` with their rows, and the icons; `Achievement.dbc`
+    and `Achievement_Criteria.dbc` for the achievements.
 
   A player without the model patch sees nothing where a pet stands, and a rider floating without
   a mount. A player without the spell patch can't learn or summon one.
@@ -93,8 +119,8 @@ git clone https://github.com/buildthehomelab/wow-mod-retail-pets.git mod-retail-
 ```
 
 The folder must be named `mod-retail-pets`, because AzerothCore derives the loader name from it.
-Re-run CMake and rebuild. The world database rows in `data/sql/db-world` are applied when the
-server starts. There is no config file.
+Re-run CMake and rebuild: the flyer mounts have a script. The world database rows in
+`data/sql/db-world` are applied when the server starts. There is no config file.
 
 Put both client patches in every player's `Data` folder before the server runs with the module.
 
@@ -131,7 +157,8 @@ python3 tools/build_pets.py --patch-w patch-W.MPQ --patch-z patch-Z.MPQ --client
 
 It copies `patch-W.MPQ`, adds the pets' and mounts' rows and icons to it and writes
 `data/sql/db-world/mod_retail_pets.sql` from `data/pets.tsv` and the built model patch. If your
-spell patch has no `SpellIcon.dbc`, the client's own copy is the base. Running it again on its
+spell patch has no `SpellIcon.dbc`, `Achievement.dbc` or `Achievement_Criteria.dbc`, the
+client's own copy is the base. Running it again on its
 own output changes nothing.
 
 ## What it adds to the database
@@ -140,15 +167,19 @@ All in the world database, all from `data/pets.tsv`:
 
 | Table | Rows |
 |---|---|
-| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502014 the mounts |
-| `spell_dbc`, `skilllineability_dbc` | 90200-90214: the summon spells |
-| `item_template`, `npc_vendor` | 90200-90214: the items, sold by Nari Rustpaw |
+| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts |
+| `spell_dbc`, `skilllineability_dbc` | 90200-90215: the summon spells |
+| `spell_script_names` | 90215: the flyer script on Whoofle Bramblewing's spell |
+| `spell_dbc` | 90230-90231: the flyers' flight auras (server only) |
+| `item_template`, `npc_vendor` | 90200-90215: the items; Nari Rustpaw sells 90200-90214 |
+| `achievement_dbc`, `achievement_criteria_dbc` | 9215 and criterion 19215: Owl Be Seeing You (the module keeps 9200-9229 and 19200-19229) |
+| `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97015: Whoofle Bramblewing as a flight form look, unlocked by spell 90215 |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
 | `creature_template`, `creature_template_model`, `creature` | 9502090: Nari Rustpaw and her spawn (guid 9502090) in Booty Bay |
 | `gossip_menu`, `gossip_menu_option`, `npc_text` | menu 9502090 and texts 9502090-9502091: her two greetings and the option that opens her window |
 | `conditions` | gossip conditions (source type 14) on menu 9502090: which greeting a player gets |
-| `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97014: the model patch's displays |
-| `creaturemodeldata_dbc` | 97000-97002: the model patch's three models |
+| `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97015: the model patch's displays |
+| `creaturemodeldata_dbc` | 97000-97003: the model patch's four models |
 
 A pet or mount has the same last digits everywhere: row 5 of the list is creature 9502005,
 spell and item 90205 and display 97005. Reserved for more: creatures 9502000-9502099 (vendors
@@ -163,7 +194,7 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 |---|---|
 | `display` | CreatureDisplayInfo id of the pet or mount |
 | `retail_display` | the retail CreatureDisplayInfo id it is converted from |
-| `form` | `pet` or `mount`: which stock display the builder clones for sounds and size (`template` in `pack.json`), and what `build_pets.py` makes of the row |
+| `form` | `pet`, `mount` or `flyer` (a mount that also flies): which stock display the builder clones for sounds and size (`template` in `pack.json`), and what `build_pets.py` makes of the row |
 | `tier` | the mod-individual-progression phase (0-18) a player has to have cleared before the vendor sells it; `0` = from the start |
 | `model` | name of the model's folder and files, in snake_case |
 | `name` | name of the pet or mount, its spell and its item |
@@ -173,8 +204,10 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 | `scale` | the creature's `DisplayScale`, on top of the retail display's own scale (a mount is drawn at its display's scale whatever this says) |
 | `quality` | item quality: 3 rare, 4 epic |
 | `price` | buy price in copper |
-| `vendor` | `creature_template` entry of the NPC that sells the item: one of `data/vendors.tsv`, or a creature the server already has |
+| `vendor` | `creature_template` entry of the NPC that sells the item: one of `data/vendors.tsv`, or a creature the server already has; `0` for none |
 | `summon_text` | description of the summon spell |
+| `druid_form` | empty, or the druid form (`flight`, `travel`, ...) the model is also a mod-transmog-plus look for, unlocked by knowing the spell |
+| `achievement`, `achievement_name`, `achievement_text` | empty, or an achievement for learning the spell: its id (9200-9229; the criterion is id + 10000), title and description |
 
 ## Columns of data/vendors.tsv
 
@@ -195,24 +228,29 @@ click opens the vendor window straight away.
 
 ## Uninstalling
 
-Remove the module folder, rebuild, and delete its rows:
+Remove the module folder, rebuild (the module has a script), and delete its rows:
 
 ```sql
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `SourceEntry` BETWEEN 90200 AND 90214;
+DELETE FROM `mod_transmog_plus_form_spells` WHERE `DisplayId` BETWEEN 97000 AND 97099;
+DELETE FROM `mod_transmog_plus_forms` WHERE `DisplayId` BETWEEN 97000 AND 97099;
+DELETE FROM `achievement_criteria_dbc` WHERE `ID` BETWEEN 19200 AND 19229;
+DELETE FROM `achievement_dbc` WHERE `ID` BETWEEN 9200 AND 9229;
+DELETE FROM `spell_script_names` WHERE `spell_id` BETWEEN 90200 AND 90229;
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `SourceEntry` BETWEEN 90200 AND 90229;
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 14 AND `SourceGroup` = 9502090;
 DELETE FROM `gossip_menu_option` WHERE `MenuID` = 9502090;
 DELETE FROM `gossip_menu` WHERE `MenuID` = 9502090;
 DELETE FROM `npc_text` WHERE `ID` BETWEEN 9502090 AND 9502091;
-DELETE FROM `npc_vendor` WHERE `item` BETWEEN 90200 AND 90214;
-DELETE FROM `item_template` WHERE `entry` BETWEEN 90200 AND 90214;
-DELETE FROM `skilllineability_dbc` WHERE `ID` BETWEEN 90200 AND 90214;
-DELETE FROM `spell_dbc` WHERE `ID` BETWEEN 90200 AND 90214;
+DELETE FROM `npc_vendor` WHERE `item` BETWEEN 90200 AND 90229;
+DELETE FROM `item_template` WHERE `entry` BETWEEN 90200 AND 90229;
+DELETE FROM `skilllineability_dbc` WHERE `ID` BETWEEN 90200 AND 90229;
+DELETE FROM `spell_dbc` WHERE `ID` BETWEEN 90200 AND 90231;
 DELETE FROM `creature` WHERE `guid` = 9502090;
 DELETE FROM `creature_template_model` WHERE `CreatureID` BETWEEN 9502000 AND 9502090;
 DELETE FROM `creature_template` WHERE `entry` BETWEEN 9502000 AND 9502090;
-DELETE FROM `creature_model_info` WHERE `DisplayID` BETWEEN 97000 AND 97014;
-DELETE FROM `creaturemodeldata_dbc` WHERE `ID` BETWEEN 97000 AND 97002;
-DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` BETWEEN 97000 AND 97014;
+DELETE FROM `creature_model_info` WHERE `DisplayID` BETWEEN 97000 AND 97099;
+DELETE FROM `creaturemodeldata_dbc` WHERE `ID` BETWEEN 97000 AND 97099;
+DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` BETWEEN 97000 AND 97099;
 ```
 
 Characters that learned a pet or mount keep an unknown spell, which the server drops at their
