@@ -41,7 +41,8 @@ server that scales flying speed (mod-mount-scaling) scales those too.
 **Mount and form.** With [mod-transmog-plus](https://github.com/buildthehomelab/wow-mod-transmog-plus)
 (1.12.0 or later), the owl is also a Flight Form look in its Forms tab: a druid who knows the
 mount has the look, and gets a chat line when they learn it. Druids who don't see it locked,
-with what it comes with.
+with what it comes with. The form is the owl without its saddle: a model of its own (display
+97016), so the mount keeps the saddle.
 
 **Achievement.** Learning the owl earns **Owl Be Seeing You** (General, 10 points). With
 mod-accountwide-mounts, the account's other characters learn the mount, and earn it, as they
@@ -167,19 +168,19 @@ All in the world database, all from `data/pets.tsv`:
 
 | Table | Rows |
 |---|---|
-| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts |
+| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview |
 | `spell_dbc`, `skilllineability_dbc` | 90200-90215: the summon spells |
 | `spell_script_names` | 90215: the flyer script on Whoofle Bramblewing's spell |
 | `spell_dbc` | 90230-90231: the flyers' flight auras (server only) |
 | `item_template`, `npc_vendor` | 90200-90215: the items; Nari Rustpaw sells 90200-90214 |
 | `achievement_dbc`, `achievement_criteria_dbc` | 9215 and criterion 19215: Owl Be Seeing You (the module keeps 9200-9229 and 19200-19229) |
-| `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97015: Whoofle Bramblewing as a flight form look, unlocked by spell 90215 |
+| `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97016: Whoofle Bramblewing (no saddle) as a flight form look, unlocked by spell 90215 |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
 | `creature_template`, `creature_template_model`, `creature` | 9502090: Nari Rustpaw and her spawn (guid 9502090) in Booty Bay |
 | `gossip_menu`, `gossip_menu_option`, `npc_text` | menu 9502090 and texts 9502090-9502091: her two greetings and the option that opens her window |
 | `conditions` | gossip conditions (source type 14) on menu 9502090: which greeting a player gets |
-| `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97015: the model patch's displays |
-| `creaturemodeldata_dbc` | 97000-97003: the model patch's four models |
+| `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97016: the model patch's displays |
+| `creaturemodeldata_dbc` | 97000-97004: the model patch's five models |
 
 A pet or mount has the same last digits everywhere: row 5 of the list is creature 9502005,
 spell and item 90205 and display 97005. Reserved for more: creatures 9502000-9502099 (vendors
@@ -194,7 +195,7 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 |---|---|
 | `display` | CreatureDisplayInfo id of the pet or mount |
 | `retail_display` | the retail CreatureDisplayInfo id it is converted from |
-| `form` | `pet`, `mount` or `flyer` (a mount that also flies): which stock display the builder clones for sounds and size (`template` in `pack.json`), and what `build_pets.py` makes of the row |
+| `form` | `pet`, `mount`, `flyer` (a mount that also flies) or `look` (only a druid form look): which stock display the builder clones for sounds and size (`template` in `pack.json`), and what `build_pets.py` makes of the row |
 | `tier` | the mod-individual-progression phase (0-18) a player has to have cleared before the vendor sells it; `0` = from the start |
 | `model` | name of the model's folder and files, in snake_case |
 | `name` | name of the pet or mount, its spell and its item |
@@ -207,6 +208,7 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 | `vendor` | `creature_template` entry of the NPC that sells the item: one of `data/vendors.tsv`, or a creature the server already has; `0` for none |
 | `summon_text` | description of the summon spell |
 | `druid_form` | empty, or the druid form (`flight`, `travel`, ...) the model is also a mod-transmog-plus look for, unlocked by knowing the spell |
+| `hide` | empty, or retail texture file ids (comma-separated) whose meshes the builder leaves out, giving the row a model of its own: the owl flight form leaves out the saddle (7768244) |
 | `achievement`, `achievement_name`, `achievement_text` | empty, or an achievement for learning the spell: its id (9200-9229; the criterion is id + 10000), title and description |
 
 ## Columns of data/vendors.tsv

@@ -1,17 +1,18 @@
-display	retail_display	variant	form	tier	model	name	textures	creature	spell	item	icon_fdid	icon	scale	quality	price	vendor	summon_text	druid_form	achievement	achievement_name	achievement_text
-97000	47634		pet	0	red_panda	Red Panda		9502000	90200	90200	838692	INV_Pet_RedPanda_Red	0.8	3	10000	9502090	Right Click to summon and dismiss your red panda.				
-97001	124531		pet	0	red_panda_backpacker	Red Panda Backpacker		9502001	90201	90201	6310498	INV_RedPandaPet_Orange	0.8	3	10000	9502090	Right Click to call or say goodbye to your red panda backpacker.				
-97002	47747		pet	1	red_panda	Sunfur Panda		9502002	90202	90202	774009	INV_Pet_RedPanda	0.8	3	10000	9502090	Right Click to summon and dismiss your sunfur panda.				
-97003	47749		pet	7	red_panda	Snowy Panda		9502003	90203	90203	838693	INV_Pet_RedPanda_White	0.8	3	10000	9502090	Right Click to summon and dismiss your snowy panda.				
-97004	47748		pet	2	red_panda	Mountain Panda		9502004	90204	90204	838691	INV_Pet_RedPanda_Brown	0.8	3	10000	9502090	Right Click to summon and dismiss your mountain panda.				
-97005	47746		pet	6	red_panda	Moonfur Panda		9502005	90205	90205	838690	INV_Pet_RedPanda_Blue	0.8	3	10000	9502090	Right Click to summon and dismiss your moonfur panda.				
-97006	124455		pet	6	red_panda_backpacker	Azure Panda Backpacker		9502006	90206	90206	6310496	INV_RedPandaPet_Blue	0.8	3	10000	9502090	Right Click to call or say goodbye to your azure panda backpacker.				
-97007	124530		pet	3	red_panda_backpacker	Ashen Panda Backpacker		9502007	90207	90207	6310497	INV_RedPandaPet_Gray	0.8	3	10000	9502090	Right Click to call or say goodbye to your ashen panda backpacker.				
-97008	124532		pet	1	red_panda_backpacker	Crimson Panda Backpacker		9502008	90208	90208	6310499	INV_RedPandaPet_Red	0.8	3	10000	9502090	Right Click to call or say goodbye to your crimson panda backpacker.				
-97009	124533		pet	7	red_panda_backpacker	Violet Panda Backpacker		9502009	90209	90209	6310500	INV_RedPandaPet_Violet	0.8	3	10000	9502090	Right Click to call or say goodbye to your violet panda backpacker.				
-97010	124511		mount	1	red_panda_mount	Great Red Panda		9502010	90210	90210	6310148	INV_RedPandaMount_Orange	1	4	100000	9502090	Summons and dismisses a rideable Great Red Panda.				
-97011	124509		mount	7	red_panda_mount	Great Azure Panda		9502011	90211	90211	6310146	INV_RedPandaMount_Blue	1	4	100000	9502090	Summons and dismisses a rideable Great Azure Panda.				
-97012	124510		mount	6	red_panda_mount	Great Ashen Panda		9502012	90212	90212	6310147	INV_RedPandaMount_Gray	1	4	100000	9502090	Summons and dismisses a rideable Great Ashen Panda.				
-97013	124512		mount	3	red_panda_mount	Great Crimson Panda		9502013	90213	90213	6310149	INV_RedPandaMount_Red	1	4	100000	9502090	Summons and dismisses a rideable Great Crimson Panda.				
-97014	124513		mount	8	red_panda_mount	Great Violet Panda		9502014	90214	90214	6310150	INV_RedPandaMount_Violet	1	4	100000	9502090	Summons and dismisses a rideable Great Violet Panda.				
-97015	145516		flyer	0	pigmy_owl_mount	Whoofle Bramblewing		9502015	90215	90215	7931761	INV_PigmyOwlMount	1	4	0	0	Summons and dismisses a rideable Whoofle Bramblewing. It flies where flying mounts can.	flight	9215	Owl Be Seeing You	Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.
+display	retail_display	variant	form	tier	model	name	textures	creature	spell	item	icon_fdid	icon	scale	quality	price	vendor	summon_text	druid_form	achievement	achievement_name	achievement_text	hide
+97000	47634		pet	0	red_panda	Red Panda		9502000	90200	90200	838692	INV_Pet_RedPanda_Red	0.8	3	10000	9502090	Right Click to summon and dismiss your red panda.					
+97001	124531		pet	0	red_panda_backpacker	Red Panda Backpacker		9502001	90201	90201	6310498	INV_RedPandaPet_Orange	0.8	3	10000	9502090	Right Click to call or say goodbye to your red panda backpacker.					
+97002	47747		pet	1	red_panda	Sunfur Panda		9502002	90202	90202	774009	INV_Pet_RedPanda	0.8	3	10000	9502090	Right Click to summon and dismiss your sunfur panda.					
+97003	47749		pet	7	red_panda	Snowy Panda		9502003	90203	90203	838693	INV_Pet_RedPanda_White	0.8	3	10000	9502090	Right Click to summon and dismiss your snowy panda.					
+97004	47748		pet	2	red_panda	Mountain Panda		9502004	90204	90204	838691	INV_Pet_RedPanda_Brown	0.8	3	10000	9502090	Right Click to summon and dismiss your mountain panda.					
+97005	47746		pet	6	red_panda	Moonfur Panda		9502005	90205	90205	838690	INV_Pet_RedPanda_Blue	0.8	3	10000	9502090	Right Click to summon and dismiss your moonfur panda.					
+97006	124455		pet	6	red_panda_backpacker	Azure Panda Backpacker		9502006	90206	90206	6310496	INV_RedPandaPet_Blue	0.8	3	10000	9502090	Right Click to call or say goodbye to your azure panda backpacker.					
+97007	124530		pet	3	red_panda_backpacker	Ashen Panda Backpacker		9502007	90207	90207	6310497	INV_RedPandaPet_Gray	0.8	3	10000	9502090	Right Click to call or say goodbye to your ashen panda backpacker.					
+97008	124532		pet	1	red_panda_backpacker	Crimson Panda Backpacker		9502008	90208	90208	6310499	INV_RedPandaPet_Red	0.8	3	10000	9502090	Right Click to call or say goodbye to your crimson panda backpacker.					
+97009	124533		pet	7	red_panda_backpacker	Violet Panda Backpacker		9502009	90209	90209	6310500	INV_RedPandaPet_Violet	0.8	3	10000	9502090	Right Click to call or say goodbye to your violet panda backpacker.					
+97010	124511		mount	1	red_panda_mount	Great Red Panda		9502010	90210	90210	6310148	INV_RedPandaMount_Orange	1	4	100000	9502090	Summons and dismisses a rideable Great Red Panda.					
+97011	124509		mount	7	red_panda_mount	Great Azure Panda		9502011	90211	90211	6310146	INV_RedPandaMount_Blue	1	4	100000	9502090	Summons and dismisses a rideable Great Azure Panda.					
+97012	124510		mount	6	red_panda_mount	Great Ashen Panda		9502012	90212	90212	6310147	INV_RedPandaMount_Gray	1	4	100000	9502090	Summons and dismisses a rideable Great Ashen Panda.					
+97013	124512		mount	3	red_panda_mount	Great Crimson Panda		9502013	90213	90213	6310149	INV_RedPandaMount_Red	1	4	100000	9502090	Summons and dismisses a rideable Great Crimson Panda.					
+97014	124513		mount	8	red_panda_mount	Great Violet Panda		9502014	90214	90214	6310150	INV_RedPandaMount_Violet	1	4	100000	9502090	Summons and dismisses a rideable Great Violet Panda.					
+97015	145516		flyer	0	pigmy_owl_mount	Whoofle Bramblewing		9502015	90215	90215	7931761	INV_PigmyOwlMount	1	4	0	0	Summons and dismisses a rideable Whoofle Bramblewing. It flies where flying mounts can.		9215	Owl Be Seeing You	Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.	
+97016	145516		look	0	pigmy_owl_mount	Whoofle Bramblewing		9502016	90215				1					flight				7768244

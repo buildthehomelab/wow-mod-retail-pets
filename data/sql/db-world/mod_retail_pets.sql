@@ -2,10 +2,10 @@
 -- data/pets.tsv: change that file and run the tool again, don't edit this one.
 -- The client needs the module's two patches (see the README), or it shows nothing at all.
 
--- The pets and the mounts' creatures.
+-- The pets and the mounts' creatures, and the form looks' preview creatures.
 DELETE FROM `creature` WHERE `guid` IN (9502090);
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502090);
-DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502090);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502016, 9502090);
+DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502016, 9502090);
 INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `movementId`, `flags_extra`) VALUES
 (9502000, 'Red Panda', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
 (9502001, 'Red Panda Backpacker', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
@@ -22,7 +22,8 @@ INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `facti
 (9502012, 'Great Ashen Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
 (9502013, 'Great Crimson Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
 (9502014, 'Great Violet Panda', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
-(9502015, 'Whoofle Bramblewing', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0);
+(9502015, 'Whoofle Bramblewing', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
+(9502016, 'Whoofle Bramblewing', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
 (9502000, 0, 97000, 0.8, 1),
 (9502001, 0, 97001, 0.8, 1),
@@ -39,7 +40,8 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 (9502012, 0, 97012, 1, 1),
 (9502013, 0, 97013, 1, 1),
 (9502014, 0, 97014, 1, 1),
-(9502015, 0, 97015, 1, 1);
+(9502015, 0, 97015, 1, 1),
+(9502016, 0, 97016, 1, 1);
 
 -- Who sells them: friendly to everyone, can't be attacked, a vendor (with a greeting first, if it has one).
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES
@@ -176,7 +178,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 (23, 9502090, 90214, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Great Violet Panda is sold once the player has cleared progression phase 8');
 
 -- The model patch's CreatureDisplayInfo and CreatureModelData rows, for the server's DBC stores.
-DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015);
+DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015, 97016);
 INSERT INTO `creaturedisplayinfo_dbc` (`ID`, `ModelID`, `SoundID`, `ExtendedDisplayInfoID`, `CreatureModelScale`, `CreatureModelAlpha`, `TextureVariation_1`, `TextureVariation_2`, `TextureVariation_3`, `PortraitTextureName`, `BloodLevel`, `BloodID`, `NPCSoundID`, `ParticleColorID`, `CreatureGeosetData`, `ObjectEffectPackageID`) VALUES
 (97000, 97000, 0, 0, 1, 255, 'T774110', '', '', '', 0, 0, 163, 0, 0, 0),
 (97001, 97001, 0, 0, 0.75, 255, 'T6310493', '', '', '', 0, 0, 163, 0, 0, 0),
@@ -193,14 +195,16 @@ INSERT INTO `creaturedisplayinfo_dbc` (`ID`, `ModelID`, `SoundID`, `ExtendedDisp
 (97012, 97002, 0, 0, 1.2, 255, 'T6256780', 'T6256792', 'T6256786', '', 1, 0, 0, 0, 0, 0),
 (97013, 97002, 0, 0, 1.2, 255, 'T6256782', 'T6256794', 'T6256788', '', 1, 0, 0, 0, 0, 0),
 (97014, 97002, 0, 0, 1.2, 255, 'T6256784', 'T6256795', 'T6256790', '', 1, 0, 0, 0, 0, 0),
-(97015, 97003, 0, 0, 1, 255, '', '', '', '', 2, 0, 0, 0, 0, 0);
-DELETE FROM `creaturemodeldata_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003);
+(97015, 97003, 0, 0, 1, 255, '', '', '', '', 2, 0, 0, 0, 0, 0),
+(97016, 97004, 0, 0, 1, 255, '', '', '', '', 2, 0, 0, 0, 0, 0);
+DELETE FROM `creaturemodeldata_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004);
 INSERT INTO `creaturemodeldata_dbc` (`ID`, `Flags`, `ModelName`, `SizeClass`, `ModelScale`, `BloodID`, `FootprintTextureID`, `FootprintTextureLength`, `FootprintTextureWidth`, `FootprintParticleScale`, `FoleyMaterialID`, `FootstepShakeSize`, `DeathThudShakeSize`, `SoundID`, `CollisionWidth`, `CollisionHeight`, `MountHeight`, `GeoBoxMinX`, `GeoBoxMinY`, `GeoBoxMinZ`, `GeoBoxMaxX`, `GeoBoxMaxY`, `GeoBoxMaxZ`, `WorldEffectScale`, `AttachedEffectScale`, `MissileCollisionRadius`, `MissileCollisionPush`, `MissileCollisionRaise`) VALUES
 (97000, 0, 'Creature\\RetailPets\\RedPanda\\RedPanda.mdx', 0, 1, 1, 7, 10, 6, 1, 0, 0, 0, 1469, 0.611111, 2.03128, 0.462593, -1.21839, -0.259978, -0.093385, 0.495662, 0.276689, 0.695761, 1, 1, 0, 0, 0),
 (97001, 0, 'Creature\\RetailPets\\RedPandaBackpacker\\RedPandaBackpacker.mdx', 0, 1, 1, 7, 10, 6, 1, 0, 0, 0, 1469, 0.611111, 2.03128, 0, -1.02305, -0.533998, -0.0407019, 0.33661, 0.532239, 1.4624, 1, 1, 0, 0, 0),
 (97002, 0, 'Creature\\RetailPets\\RedPandaMount\\RedPandaMount.mdx', 1, 1, -1, 7, 18, 12, 2, 0, 0, 0, 2499, 0.611111, 2.03128, 2.11116, -4.53993, -1.04993, -0.0723111, 1.51247, 1.05826, 3.35619, 1, 1, 0, 0, 0),
-(97003, 0, 'Creature\\RetailPets\\PigmyOwlMount\\PigmyOwlMount.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.61186, -2.82588, -1.10715, -0.489358, 1.14963, 1.04463, 2.12517, 1, 1, 0, 0, 0);
-DELETE FROM `creature_model_info` WHERE `DisplayID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015);
+(97003, 0, 'Creature\\RetailPets\\PigmyOwlMount\\PigmyOwlMount.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.61186, -2.82588, -1.10715, -0.489358, 1.14963, 1.04463, 2.12517, 1, 1, 0, 0, 0),
+(97004, 0, 'Creature\\RetailPets\\PigmyOwlMount\\PigmyOwlMount_da7111.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.61186, -2.82588, -1.10715, -0.489358, 1.14963, 1.04463, 2.12517, 1, 1, 0, 0, 0);
+DELETE FROM `creature_model_info` WHERE `DisplayID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015, 97016);
 INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES
 (97000, 0.25, 0.5, 2, 0),
 (97001, 0.25, 0.5, 2, 0),
@@ -217,7 +221,8 @@ INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`,
 (97012, 1.45, 1.5, 2, 0),
 (97013, 1.45, 1.5, 2, 0),
 (97014, 1.45, 1.5, 2, 0),
-(97015, 1.45, 1.5, 2, 0);
+(97015, 1.45, 1.5, 2, 0),
+(97016, 1.45, 1.5, 2, 0);
 
 -- Druid form looks for mod-transmog-plus: a character who knows the mount has the form.
 -- That module owns the two tables; they are made here too so this file applies first.
@@ -238,6 +243,6 @@ CREATE TABLE IF NOT EXISTS `mod_transmog_plus_form_spells` (
 DELETE FROM `mod_transmog_plus_form_spells` WHERE `DisplayId` BETWEEN 97000 AND 97099;
 DELETE FROM `mod_transmog_plus_forms` WHERE `DisplayId` BETWEEN 97000 AND 97099;
 INSERT INTO `mod_transmog_plus_forms` (`DisplayId`, `Form`, `Name`, `UnlockPhase`, `PreviewCreature`, `SortOrder`) VALUES
-(97015, 'flight', 'Whoofle Bramblewing', 0, 9502015, 100001);
+(97016, 'flight', 'Whoofle Bramblewing', 0, 9502016, 100001);
 INSERT INTO `mod_transmog_plus_form_spells` (`DisplayId`, `SpellId`) VALUES
-(97015, 90215);
+(97016, 90215);
