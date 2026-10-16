@@ -16,3 +16,9 @@ display	retail_display	variant	form	tier	model	name	textures	creature	spell	item
 97014	124513		mount	8	red_panda_mount	Great Violet Panda		9502014	90214	90214	6310150	INV_RedPandaMount_Violet	1	4	100000	9502090	Summons and dismisses a rideable Great Violet Panda.					
 97015	145516		flyer	0	pigmy_owl_mount	Whoofle Bramblewing		9502015	90215	90215	7931761	INV_PigmyOwlMount	1	4	0	0	Summons and dismisses a rideable Whoofle Bramblewing. It flies where flying mounts can.		9215	Owl Be Seeing You	Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.	
 97016	145516		look	0	pigmy_owl_mount	Whoofle Bramblewing		9502016	90215				1					flight				7768244
+236220			pet	0		Armadillo Pup		9502017	90216	90216	464159	INV_Misc_BabyArmadilloPet	1	3	0	0	Right Click to summon and dismiss your armadillo pup.					
+237136			pet	0		Dark Phoenix Hatchling		9502018	90217	90217	464139	INV_Misc_DarkPhoenixPet_01	1	3	0	0	Right Click to summon and dismiss your dark phoenix hatchling.					
+238614			pet	0		Lil' Tarecgosa		9502019	90218	90218	524050	INV_Misc_PetDragonWhelpTarecgosa	1	3	0	0	Right Click to summon and dismiss Lil' Tarecgosa.					
+236213			mount	0		Golden King		9502020	90219	90219	464140	INV_Mount_AllianceLionG	1	4	0	0	Summons and dismisses a rideable Golden King.					
+237138			mount	0		Kor'kron Annihilator		9502021	90220	90220	464143	INV_Mount_HordeScorpionG	1	4	0	0	Summons and dismisses a rideable Kor'kron Annihilator.					
+237145			flyer	0		Dark Phoenix		9502022	90221	90221	464141	INV_Mount_DarkPhoenixA	1	4	0	0	Summons and dismisses a rideable Dark Phoenix. It flies where flying mounts can.					

@@ -17,10 +17,17 @@ Rustpaw**, a red panda breeder on the Booty Bay boardwalk.
 | Not sold by Nari | Looks like |
 |---|---|
 | **Whoofle Bramblewing** | A plump little owl with a warm glow, retail's shop mount. A mount that flies, a druid's Flight Form look, and the achievement **Owl Be Seeing You** |
+| **Armadillo Pup**, **Dark Phoenix Hatchling**, **Lil' Tarecgosa** (companions) | Cataclysm's guild reward pets |
+| **Golden King**, **Kor'kron Annihilator** (mounts), **Dark Phoenix** (a mount that flies) | Cataclysm's guild reward mounts: a golden lion, a scorpion, a shadowy phoenix |
 
-The Whoofle Bramblewing item has no vendor: hand it out some other way, such as a shop (the
-launcher shop of [mod-boss-coins](https://github.com/buildthehomelab/wow-mod-boss-coins) has it
-for free), a reward or a GM's `.additem 90215`.
+These items have no vendor: hand them out some other way, such as a shop (the launcher shop of
+[mod-boss-coins](https://github.com/buildthehomelab/wow-mod-boss-coins) has Whoofle Bramblewing
+for free), a reward or a GM's `.additem 90215`. The guild vendors of
+[mod-guild-levels](https://github.com/buildthehomelab/wow-mod-guild-levels) sell the six guild
+reward pets and mounts (90216-90221). Those six wear looks from
+[mod-retail-library](https://github.com/buildthehomelab/wow-mod-retail-library) (displays 236220,
+237136, 238614, 236213, 237138, 237145) and have no model in this module's patch, so they need
+that module and its patches.
 
 Each is learned from an item and shows up on the Pets or the Mounts tab of the character window,
 like any stock companion or mount. They keep their retail animations: the Backpacker has 149 of
@@ -168,11 +175,11 @@ All in the world database, all from `data/pets.tsv`:
 
 | Table | Rows |
 |---|---|
-| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview |
-| `spell_dbc`, `skilllineability_dbc` | 90200-90215: the summon spells |
-| `spell_script_names` | 90215: the flyer script on Whoofle Bramblewing's spell |
+| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview, 9502017-9502022 the guild reward pets and mounts |
+| `spell_dbc`, `skilllineability_dbc` | 90200-90221: the summon spells |
+| `spell_script_names` | 90215 and 90221: the flyer script on Whoofle Bramblewing's and the Dark Phoenix's spells |
 | `spell_dbc` | 90230-90231: the flyers' flight auras (server only) |
-| `item_template`, `npc_vendor` | 90200-90215: the items; Nari Rustpaw sells 90200-90214 |
+| `item_template`, `npc_vendor` | 90200-90221: the items; Nari Rustpaw sells 90200-90214 |
 | `achievement_dbc`, `achievement_criteria_dbc` | 9215 and criterion 19215: Owl Be Seeing You (the module keeps 9200-9229 and 19200-19229) |
 | `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97016: Whoofle Bramblewing (no saddle) as a flight form look, unlocked by spell 90215 |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
@@ -183,7 +190,10 @@ All in the world database, all from `data/pets.tsv`:
 | `creaturemodeldata_dbc` | 97000-97004: the model patch's five models |
 
 A pet or mount has the same last digits everywhere: row 5 of the list is creature 9502005,
-spell and item 90205 and display 97005. Reserved for more: creatures 9502000-9502099 (vendors
+spell and item 90205 and display 97005 (from the guild rewards on, the creature is one ahead:
+9502016 went to the owl's flight form). A row wearing a mod-retail-library look keeps that
+library's display id (200000 + the retail display) and leaves `retail_display` empty, so the
+model patch skips it and the SQL leaves its display rows to the library. Reserved for more: creatures 9502000-9502099 (vendors
 from 9502090, and their gossip menus and texts), spells and items 90200-90229, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
 id, and the item display uses the item's.
 
