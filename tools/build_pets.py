@@ -25,6 +25,9 @@ The spell icon and the SkillLineAbility row use the spell's id, the item display
 
 --patch-z is the built model patch: its CreatureDisplayInfo and CreatureModelData rows are
 mirrored into the SQL, because the server checks creature displays against its own DBC stores.
+A row whose display is in wow-mod-retail-library's block (LIBRARY_DISPLAYS) and that has no
+retail_display wears that library's look: it has no model of its own in patch-Z, and the
+library's SQL and patches carry its display rows, so the server needs that module too.
 
 A row's `vendor` is the creature that sells its item. data/vendors.tsv lists the module's own
 vendors (the SQL makes and spawns those); any other entry is taken to be a creature the server
@@ -137,6 +140,12 @@ DRUID_FORMS = ("bear", "cat", "travel", "aquatic", "flight", "moonkin", "tree")
 FORM_SORT_BASE = 100000
 # The module's CreatureDisplayInfo ids: its form looks are the rows in this block.
 DISPLAY_BLOCK = (97000, 97099)
+# wow-mod-retail-library's displays (200000 + the retail display id): a row may wear one of those.
+LIBRARY_DISPLAYS = (200000, 399999)
+
+
+def library_look(p):
+    return not p.get("retail_display") and LIBRARY_DISPLAYS[0] <= p["display"] <= LIBRARY_DISPLAYS[1]
 
 # mod-transmog-plus's own tables (its data/sql/world): keep these the same. The module's SQL makes
 # them too, because the server applies every module's SQL in file name order and this file comes
@@ -624,7 +633,8 @@ def write_sql(path, pets, looks, vendors, new_spells, patch_z, tmp):
             sys.exit("%s has no %s.dbc" % (patch_z, name))
     cdi_rows, cdi_str, _ = read_dbc(cdi_path)
     cmd_rows, cmd_str, _ = read_dbc(cmd_path)
-    cdi = [template(cdi_rows, p["display"], "%s: CreatureDisplayInfo.dbc row" % patch_z) for p in pets + looks]
+    own = [p for p in pets + looks if not library_look(p)]   # the library's rows are its SQL's
+    cdi = [template(cdi_rows, p["display"], "%s: CreatureDisplayInfo.dbc row" % patch_z) for p in own]
     cmd = [template(cmd_rows, model, "%s: CreatureModelData.dbc row" % patch_z)
            for model in sorted({r[1] for r in cdi})]
 
@@ -739,7 +749,7 @@ def write_sql(path, pets, looks, vendors, new_spells, patch_z, tmp):
             for r in cmd) + ";\n")
         f.write("DELETE FROM `creature_model_info` WHERE `DisplayID` IN (%s);\n" % id_list(displays))
         f.write("INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES\n")
-        f.write(",\n".join("(%d, %g, %g, 2, 0)" % (p["display"], *p["kind"]["model"]) for p in pets + looks) + ";\n")
+        f.write(",\n".join("(%d, %g, %g, 2, 0)" % (p["display"], *p["kind"]["model"]) for p in own) + ";\n")
         write_forms(f, pets + looks)
     print("wrote", path)
 
