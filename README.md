@@ -51,7 +51,7 @@ mount has the look, and gets a chat line when they learn it. Druids who don't se
 with what it comes with. The form is the owl without its saddle: a model of its own (display
 97016), so the mount keeps the saddle.
 
-**Achievement.** Learning the owl earns **Owl Be Seeing You** (General, 10 points). With
+**Achievement.** Learning the owl earns **Owl Be Seeing You** (Feats of Strength, no points). With
 mod-accountwide-mounts, the account's other characters learn the mount, and earn it, as they
 log in. It is an Achievement.dbc row in the spell patch, the same row in `achievement_dbc`, and
 one "learn spell" criterion; the core awards it by itself.
