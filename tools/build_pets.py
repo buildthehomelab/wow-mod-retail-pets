@@ -122,11 +122,11 @@ LOOK = dict(creature=KINDS["mount"]["creature"], model=KINDS["mount"]["model"])
 # core keeps them to Outland and Northrend. (id, flight speed, name); the script uses the ids.
 FLIGHT_SPELLS = ((90230, 150, "Retail Pets Flight"), (90231, 280, "Retail Pets Swift Flight"))
 
-# Achievements: General category, 10 points, after the stock mount ones in the category. Ids are
-# 16 bits in the characters database, so they can't follow the spell ids.
+# Achievements: Feats of Strength, no points like the stock ones there, after the stock ones in
+# the category. Ids are 16 bits in the characters database, so they can't follow the spell ids.
 ACHIEVEMENT_BLOCK = (9200, 9229)  # the module's achievement ids; criteria ids are these + 10000
-ACHIEVEMENT_CATEGORY_GENERAL = 92
-ACHIEVEMENT_POINTS = 10
+ACHIEVEMENT_CATEGORY_FEATS_OF_STRENGTH = 81
+ACHIEVEMENT_POINTS = 0
 ACHIEVEMENT_UI_ORDER = 1000
 ACHIEVEMENT_CRITERIA_OFFSET = 10000
 ACHIEVEMENT_CRITERIA_LEARN_SPELL = 34
@@ -538,7 +538,7 @@ def add_achievements(files, pets, args, tmp):
         row[20] = LANG_MASK
         row[21] = add_string(ach_str, p["achievement_text"])
         row[37] = LANG_MASK
-        row[38] = ACHIEVEMENT_CATEGORY_GENERAL
+        row[38] = ACHIEVEMENT_CATEGORY_FEATS_OF_STRENGTH
         row[39] = ACHIEVEMENT_POINTS
         row[40] = ACHIEVEMENT_UI_ORDER + pets.index(p)
         row[42] = p["spell"]                             # SpellIcon: the spell's own icon
@@ -769,7 +769,7 @@ def write_achievements(f, pets):
         f.write("INSERT INTO `achievement_dbc` (`ID`, `Faction`, `Instance_Id`, `Supercedes`, `Title_Lang_enUS`, `Title_Lang_Mask`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Category`, `Points`, `Ui_Order`, `Flags`, `IconID`, `Reward_Lang_Mask`, `Minimum_Criteria`, `Shares_Criteria`) VALUES\n")
         f.write(",\n".join("(%d, -1, -1, 0, %s, %d, %s, %d, %d, %d, %d, 0, %d, %d, 0, 0)" % (
             p["achievement"], sql_str(p["achievement_name"]), LANG_MASK, sql_str(p["achievement_text"]), LANG_MASK,
-            ACHIEVEMENT_CATEGORY_GENERAL, ACHIEVEMENT_POINTS, ACHIEVEMENT_UI_ORDER + pets.index(p), p["spell"],
+            ACHIEVEMENT_CATEGORY_FEATS_OF_STRENGTH, ACHIEVEMENT_POINTS, ACHIEVEMENT_UI_ORDER + pets.index(p), p["spell"],
             LANG_MASK_EMPTY) for p in rows) + ";\n")
         f.write("INSERT INTO `achievement_criteria_dbc` (`ID`, `Achievement_Id`, `Type`, `Asset_Id`, `Quantity`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Flags`, `Ui_Order`) VALUES\n")
         f.write(",\n".join("(%d, %d, %d, %d, 0, %s, %d, %d, 1)" % (

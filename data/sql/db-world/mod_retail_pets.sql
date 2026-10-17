@@ -144,7 +144,7 @@ INSERT INTO `spell_dbc` (`ID`, `Attributes`, `AttributesEx4`, `CastingTimeIndex`
 DELETE FROM `achievement_criteria_dbc` WHERE `ID` BETWEEN 19200 AND 19229;
 DELETE FROM `achievement_dbc` WHERE `ID` BETWEEN 9200 AND 9229;
 INSERT INTO `achievement_dbc` (`ID`, `Faction`, `Instance_Id`, `Supercedes`, `Title_Lang_enUS`, `Title_Lang_Mask`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Category`, `Points`, `Ui_Order`, `Flags`, `IconID`, `Reward_Lang_Mask`, `Minimum_Criteria`, `Shares_Criteria`) VALUES
-(9215, -1, -1, 0, 'Owl Be Seeing You', 16712190, 'Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.', 16712190, 92, 10, 1015, 0, 90215, 16712188, 0, 0);
+(9215, -1, -1, 0, 'Owl Be Seeing You', 16712190, 'Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.', 16712190, 81, 0, 1015, 0, 90215, 16712188, 0, 0);
 INSERT INTO `achievement_criteria_dbc` (`ID`, `Achievement_Id`, `Type`, `Asset_Id`, `Quantity`, `Description_Lang_enUS`, `Description_Lang_Mask`, `Flags`, `Ui_Order`) VALUES
 (19215, 9215, 34, 90215, 0, 'Whoofle Bramblewing', 16712190, 2, 1);
 
