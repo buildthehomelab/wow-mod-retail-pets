@@ -457,10 +457,13 @@ def patch_w(files, pets, args, tmp):
     displays, display_str, display_fields = read_dbc(files[dbc("ItemDisplayInfo")])
     icons, icon_str, icon_fields = read_dbc(files[dbc("SpellIcon")])
 
-    # An id of ours that the patch already uses for something else is a clash, not an update.
+    # An id of ours that the patch already uses for something else is a clash, not an update. A
+    # spell that summons the row's own creature is the row's, renamed.
     for p in pets:
+        old = next((r for r in spells if r[0] == p["spell"]), None)
+        if old and old[F_EFFECT_MISC] != p["creature"] and string_at(spell_str, old[F_NAME]) != p["name"]:
+            sys.exit("Spell.dbc row %d is taken: %s" % (p["spell"], string_at(spell_str, old[F_NAME])))
         for rows, row_id, col, strings, table in (
-                (spells, p["spell"], F_NAME, spell_str, "Spell"),
                 (icons, p["spell"], 1, icon_str, "SpellIcon"),
                 (displays, p["item"], 5, display_str, "ItemDisplayInfo")):
             old = next((r for r in rows if r[0] == row_id), None)

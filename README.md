@@ -12,22 +12,24 @@ Rustpaw**, a red panda breeder on the Booty Bay boardwalk.
 
 | Mounts (10 gold each) | Looks like |
 |---|---|
-| **Great Red Panda**, **Great Azure**, **Ashen**, **Crimson** and **Violet Panda** | A red panda big enough to ride, carrying a chair and a tea set, in five colours |
+| The Meeksi: **Meeksi Rollingpaw**, **Rufflefur**, **Softpaw**, **Teatuft** and **Brewthief** | A red panda big enough to ride, carrying a chair and a tea set, in five colours |
 
 | Not sold by Nari | Looks like |
 |---|---|
 | **Whoofle Bramblewing** | A plump little owl with a warm glow, retail's shop mount. A mount that flies, a druid's Flight Form look, and the achievement **Owl Be Seeing You** |
 | **Armadillo Pup**, **Dark Phoenix Hatchling**, **Lil' Tarecgosa** (companions) | Cataclysm's guild reward pets |
 | **Golden King**, **Kor'kron Annihilator** (mounts), **Dark Phoenix** (a mount that flies) | Cataclysm's guild reward mounts: a golden lion, a scorpion, a shadowy phoenix |
+| **69 retail shop mounts**: the Grrlocs, Chaos-Forged mounts, Furlines, Grovegliders, Great Ravens, Witchwick's Riders, Witch's Sweepers, Zothwings, Arboons, Celestials, the Lunar New Year mounts, Heart of the Aspects, the Trader's Gilded Brutosaur and more | Retail's in-game shop mounts. 61 are flyers; the Grrlocs, the Brutosaur, the Wandering Caravan, the Packmaster and the Hermit Crab stay on the ground |
 
 These items have no vendor: hand them out some other way, such as a shop (the launcher shop of
 [mod-boss-coins](https://github.com/buildthehomelab/wow-mod-boss-coins) has Whoofle Bramblewing
-for free), a reward or a GM's `.additem 90215`. The guild vendors of
+for free, and the 69 retail shop mounts, 90600-90669 (90653 left free), each unlocked by a progression phase), a
+reward or a GM's `.additem 90215`. The guild vendors of
 [mod-guild-levels](https://github.com/buildthehomelab/wow-mod-guild-levels) sell the six guild
-reward pets and mounts (90216-90221). Those six wear looks from
-[mod-retail-library](https://github.com/buildthehomelab/wow-mod-retail-library) (displays 236220,
-237136, 238614, 236213, 237138, 237145) and have no model in this module's patch, so they need
-that module and its patches.
+reward pets and mounts (90216-90221). Those six and the 69 shop mounts wear looks from
+[mod-retail-library](https://github.com/buildthehomelab/wow-mod-retail-library) (200000 + the
+retail display, such as 236220 for the Armadillo Pup) and have no model in this module's patch,
+so they need that module and its patches.
 
 Each is learned from an item and shows up on the Pets or the Mounts tab of the character window,
 like any stock companion or mount. They keep their retail animations: the Backpacker has 149 of
@@ -38,7 +40,7 @@ a stock 100% mount, so they are epic-speed mounts unless the server scales mount
 (such as [mod-mount-scaling](https://github.com/buildthehomelab/wow-mod-mount-scaling), which
 treats them like every other ground mount).
 
-Whoofle Bramblewing is a **flyer**, like retail's mounts: the same ground mount, and once its
+Whoofle Bramblewing is a **flyer**, like retail's mounts (and so are 61 of the shop mounts and the Dark Phoenix): the same ground mount, and once its
 rider has Expert Riding (225) it also flies, at +150%, or +280% with Artisan Riding (300), wherever
 a stock flying mount can (Outland, and Northrend with Cold Weather Flying). The module's script
 (`src/RetailPetsFlyer.cpp`) gives the rider one of two server-only flight auras, 90230 or 90231,
@@ -64,12 +66,12 @@ on the server, Nari only shows and sells what a player's own progression has unl
 | Sold once the player has cleared | Phase | Companions | Mount |
 |---|---|---|---|
 | nothing: from the start | 0 | Red Panda, Red Panda Backpacker | |
-| Molten Core | 1 | Sunfur Panda, Crimson Panda Backpacker | Great Red Panda |
+| Molten Core | 1 | Sunfur Panda, Crimson Panda Backpacker | Meeksi Rollingpaw |
 | Onyxia's Lair | 2 | Mountain Panda | |
-| Blackwing Lair | 3 | Ashen Panda Backpacker | Great Crimson Panda |
-| the Temple of Ahn'Qiraj | 6 | Moonfur Panda, Azure Panda Backpacker | Great Ashen Panda |
-| Naxxramas (level 60) | 7 | Snowy Panda, Violet Panda Backpacker | Great Azure Panda |
-| the Into the Breach quest (Outland opens) | 8 | | Great Violet Panda |
+| Blackwing Lair | 3 | Ashen Panda Backpacker | Meeksi Teatuft |
+| the Temple of Ahn'Qiraj | 6 | Moonfur Panda, Azure Panda Backpacker | Meeksi Softpaw |
+| Naxxramas (level 60) | 7 | Snowy Panda, Violet Panda Backpacker | Meeksi Rufflefur |
+| the Into the Breach quest (Outland opens) | 8 | | Meeksi Brewthief |
 
 She says so before she opens her window: one greeting while some of her pandas are still locked
 for the player, another once none is.
@@ -90,7 +92,11 @@ Category: Collections
 
 - A red panda breeder, **Nari Rustpaw**, has set up on the Booty Bay boardwalk. She sells red panda
   companions, among them the **Red Panda** and the **Red Panda Backpacker**, and the rideable
-  **Great Red Panda**.
+  **Meeksi**.
+- The Great Panda mounts are now called by their retail names: **Meeksi Rollingpaw**,
+  **Rufflefur**, **Softpaw**, **Teatuft** and **Brewthief**.
+- **69 more retail mounts**, from Grrlocs to Chaos-Forged gryphons and Witchwick's Riders. Most
+  of them fly, wherever flying mounts can. Nari doesn't sell them: they come from the realm's shop.
 - Companions appear on the Pets tab and mounts on the Mounts tab once learned, like any other.
 - Nari starts you off with two companions. The other coats and the mounts join her stock as you
   clear raids: Molten Core brings the first mount, and the last arrives when the Dark Portal opens.
@@ -175,11 +181,11 @@ All in the world database, all from `data/pets.tsv`:
 
 | Table | Rows |
 |---|---|
-| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview, 9502017-9502022 the guild reward pets and mounts |
-| `spell_dbc`, `skilllineability_dbc` | 90200-90221: the summon spells |
-| `spell_script_names` | 90215 and 90221: the flyer script on Whoofle Bramblewing's and the Dark Phoenix's spells |
+| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview, 9502017-9502022 the guild reward pets and mounts, 9502100-9502169 the shop mounts |
+| `spell_dbc`, `skilllineability_dbc` | 90200-90221 and 90600-90669: the summon spells |
+| `spell_script_names` | the flyer script on the flyers' spells: 90215 (Whoofle Bramblewing), 90221 (the Dark Phoenix) and 61 of the shop mounts' |
 | `spell_dbc` | 90230-90231: the flyers' flight auras (server only) |
-| `item_template`, `npc_vendor` | 90200-90221: the items; Nari Rustpaw sells 90200-90214 |
+| `item_template`, `npc_vendor` | 90200-90221 and 90600-90669: the items; Nari Rustpaw sells 90200-90214 |
 | `achievement_dbc`, `achievement_criteria_dbc` | 9215 and criterion 19215: Owl Be Seeing You (the module keeps 9200-9229 and 19200-19229) |
 | `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97016: Whoofle Bramblewing (no saddle) as a flight form look, unlocked by spell 90215 |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
@@ -191,10 +197,11 @@ All in the world database, all from `data/pets.tsv`:
 
 A pet or mount has the same last digits everywhere: row 5 of the list is creature 9502005,
 spell and item 90205 and display 97005 (from the guild rewards on, the creature is one ahead:
-9502016 went to the owl's flight form). A row wearing a mod-retail-library look keeps that
+9502016 went to the owl's flight form). The shop mounts start a block of their own: row n of
+them is creature 9502100 + n, spell and item 90600 + n. A row wearing a mod-retail-library look keeps that
 library's display id (200000 + the retail display) and leaves `retail_display` empty, so the
 model patch skips it and the SQL leaves its display rows to the library. Reserved for more: creatures 9502000-9502099 (vendors
-from 9502090, and their gossip menus and texts), spells and items 90200-90229, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
+from 9502090, and their gossip menus and texts) and 9502100-9502199, spells and items 90200-90229 and 90600-90699, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
 id, and the item display uses the item's.
 
 ## Columns of data/pets.tsv
@@ -247,19 +254,19 @@ DELETE FROM `mod_transmog_plus_form_spells` WHERE `DisplayId` BETWEEN 97000 AND 
 DELETE FROM `mod_transmog_plus_forms` WHERE `DisplayId` BETWEEN 97000 AND 97099;
 DELETE FROM `achievement_criteria_dbc` WHERE `ID` BETWEEN 19200 AND 19229;
 DELETE FROM `achievement_dbc` WHERE `ID` BETWEEN 9200 AND 9229;
-DELETE FROM `spell_script_names` WHERE `spell_id` BETWEEN 90200 AND 90229;
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `SourceEntry` BETWEEN 90200 AND 90229;
+DELETE FROM `spell_script_names` WHERE `spell_id` BETWEEN 90200 AND 90229 OR `spell_id` BETWEEN 90600 AND 90699;
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND (`SourceEntry` BETWEEN 90200 AND 90229 OR `SourceEntry` BETWEEN 90600 AND 90699);
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 14 AND `SourceGroup` = 9502090;
 DELETE FROM `gossip_menu_option` WHERE `MenuID` = 9502090;
 DELETE FROM `gossip_menu` WHERE `MenuID` = 9502090;
 DELETE FROM `npc_text` WHERE `ID` BETWEEN 9502090 AND 9502091;
-DELETE FROM `npc_vendor` WHERE `item` BETWEEN 90200 AND 90229;
-DELETE FROM `item_template` WHERE `entry` BETWEEN 90200 AND 90229;
-DELETE FROM `skilllineability_dbc` WHERE `ID` BETWEEN 90200 AND 90229;
-DELETE FROM `spell_dbc` WHERE `ID` BETWEEN 90200 AND 90231;
+DELETE FROM `npc_vendor` WHERE `item` BETWEEN 90200 AND 90229 OR `item` BETWEEN 90600 AND 90699;
+DELETE FROM `item_template` WHERE `entry` BETWEEN 90200 AND 90229 OR `entry` BETWEEN 90600 AND 90699;
+DELETE FROM `skilllineability_dbc` WHERE `ID` BETWEEN 90200 AND 90229 OR `ID` BETWEEN 90600 AND 90699;
+DELETE FROM `spell_dbc` WHERE `ID` BETWEEN 90200 AND 90231 OR `ID` BETWEEN 90600 AND 90699;
 DELETE FROM `creature` WHERE `guid` = 9502090;
-DELETE FROM `creature_template_model` WHERE `CreatureID` BETWEEN 9502000 AND 9502090;
-DELETE FROM `creature_template` WHERE `entry` BETWEEN 9502000 AND 9502090;
+DELETE FROM `creature_template_model` WHERE `CreatureID` BETWEEN 9502000 AND 9502199;
+DELETE FROM `creature_template` WHERE `entry` BETWEEN 9502000 AND 9502199;
 DELETE FROM `creature_model_info` WHERE `DisplayID` BETWEEN 97000 AND 97099;
 DELETE FROM `creaturemodeldata_dbc` WHERE `ID` BETWEEN 97000 AND 97099;
 DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` BETWEEN 97000 AND 97099;
