@@ -84,7 +84,10 @@ has no such quests: it logs each condition as skipped at startup and Nari sells 
 Everything is listed in [`data/pets.tsv`](data/pets.tsv), one row per pet or mount. Another
 retail creature becomes one by adding a row and running the two tools below.
 
-Not converted: particle effects, so the steam over the mounts' teapot is missing.
+The models keep their retail effects: particles, ribbons and glows (`"effects": true` in
+[`pack.json`](pack.json), an option of the converter). The Meeksi mounts' teapots steam and
+bubble, and Whoofle Bramblewing gives off embers, smoke and puffs of flame, and leaves glowing
+trails.
 
 ## Patch Notes: Red Panda Companions
 
@@ -98,6 +101,8 @@ Category: Collections
 - **69 more retail mounts**, from Grrlocs to Chaos-Forged gryphons and Witchwick's Riders. Most
   of them fly, wherever flying mounts can. Nari doesn't sell them: they come from the realm's shop.
 - Companions appear on the Pets tab and mounts on the Mounts tab once learned, like any other.
+- The **Meeksi** mounts' teapots steam and bubble, and **Whoofle Bramblewing** gives off embers,
+  smoke and puffs of flame, and leaves glowing trails.
 - Nari starts you off with two companions. The other coats and the mounts join her stock as you
   clear raids: Molten Core brings the first mount, and the last arrives when the Dark Portal opens.
 
@@ -110,7 +115,8 @@ Category: Collections
 - **Two client patches for every player.** Each pet or mount is a new model, a new spell and a new
   item, none of which the 3.3.5a client knows:
   - the model patch (`patch-Z.MPQ` in the examples below): the models, their textures, and
-    `CreatureDisplayInfo.dbc` / `CreatureModelData.dbc` with their rows;
+    `CreatureDisplayInfo.dbc` / `CreatureModelData.dbc` with their rows, plus
+    `ParticleColor.dbc` with the colours of the Meeksi mounts' effects;
   - the spell patch (`patch-W.MPQ` in the examples; if another patch already ships your
     `Spell.dbc`, use that one): `Spell.dbc`, `SkillLineAbility.dbc`, `Item.dbc`,
     `ItemDisplayInfo.dbc` and `SpellIcon.dbc` with their rows, and the icons; `Achievement.dbc`
@@ -152,9 +158,13 @@ python3 wow-mod-retail-creatures/tools/build_patch.py --pack mod-retail-pets \
     --dbc dbc/ --cache ~/creatures-cache --work ~/pets-work --out patch-Z.MPQ
 ```
 
-`dbc/` holds the `CreatureDisplayInfo.dbc` and `CreatureModelData.dbc` your players already have,
-plus the client's `AnimationData.dbc`. A patch replaces whole files, so if another patch ships
-those two DBCs, build on the copies from the last one to load and give this patch a later letter.
+`dbc/` holds the `CreatureDisplayInfo.dbc`, `CreatureModelData.dbc` and `ParticleColor.dbc` your
+players already have (on an enUS client the stock `ParticleColor.dbc` is in
+`Data\enUS\patch-enUS-2.MPQ`), plus the client's `AnimationData.dbc`. Without `ParticleColor.dbc`
+the build only warns, and the Meeksi mounts' steam and bubbles come out the wrong colour, or white.
+A patch replaces whole files, so if another patch ships those DBCs, build on the copies from the
+last one to load and give this patch a later letter. A patch that loads after this one and ships
+`ParticleColor.dbc` (wow-mod-retail-library's looks patch does) has to be built on this one's.
 For example, if you also run the wow-mod-retail-druid-forms and wow-mod-retail-shaman-totems
 packs, their patches ship those DBCs: build on the one that loads last, and **rebuild the model
 patch whenever one of them changes**.
