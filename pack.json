@@ -7,6 +7,7 @@
   "subname": "",
   "sort_base": 0,
   "prune_textures": true,
+  "effects": true,
   "template": {"pet": 10990, "mount": 22464, "flyer": 22470, "look": 22470},
   "source": "buildthehomelab/wow-mod-retail-pets data/pets.tsv. The display ids are in that repo's patch-Z.MPQ."
 }
