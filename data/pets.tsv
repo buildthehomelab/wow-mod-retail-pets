@@ -14,7 +14,7 @@ display	retail_display	variant	form	tier	model	name	textures	creature	spell	item
 97012	124510		mount	6	red_panda_mount	Meeksi Softpaw		9502012	90212	90212	6310147	INV_RedPandaMount_Gray	1	4	100000	9502090	Summons and dismisses a rideable Meeksi Softpaw.					
 97013	124512		mount	3	red_panda_mount	Meeksi Teatuft		9502013	90213	90213	6310149	INV_RedPandaMount_Red	1	4	100000	9502090	Summons and dismisses a rideable Meeksi Teatuft.					
 97014	124513		mount	8	red_panda_mount	Meeksi Brewthief		9502014	90214	90214	6310150	INV_RedPandaMount_Violet	1	4	100000	9502090	Summons and dismisses a rideable Meeksi Brewthief.					
-97015	145516		flyer	0	pigmy_owl_mount	Whoofle Bramblewing		9502015	90215	90215	7931761	INV_PigmyOwlMount	1	4	0	0	Summons and dismisses a rideable Whoofle Bramblewing. It flies where flying mounts can.		9215	Owl Be Seeing You	Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.	
+97015	145516		flyer	0	pigmy_owl_mount	Whoofle Bramblewing		9502015	90215	90215	7931761	INV_PigmyOwlMount	1	4	0	0	Summons and dismisses a rideable Whoofle Bramblewing. It flies where flying mounts can.		9215	Owl Be Seeing You	Learn to ride Whoofle Bramblewing. Keep a close eye on your tailfeathers.	7768220,7768225
 97016	145516		look	0	pigmy_owl_mount	Whoofle Bramblewing		9502016	90215				1					flight				7768244
 236220			pet	0		Armadillo Pup		9502017	90216	90216	464159	INV_Misc_BabyArmadilloPet	1	3	0	0	Right Click to summon and dismiss your armadillo pup.					
 237136			pet	0		Dark Phoenix Hatchling		9502018	90217	90217	464139	INV_Misc_DarkPhoenixPet_01	1	3	0	0	Right Click to summon and dismiss your dark phoenix hatchling.					
