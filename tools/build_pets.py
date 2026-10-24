@@ -190,8 +190,11 @@ def read_dbc(path):
     return rows, strings, fields
 
 
-def write_dbc(path, rows, strings, fields):
-    rows = sorted(rows, key=lambda r: r[0])
+def write_dbc(path, rows, strings, fields, keep_order=False):
+    """Rows in id order, or with keep_order as given: the client reads Achievement.dbc in file
+    order (see series_breaks), so the achievement tables keep Blizzard's."""
+    if not keep_order:
+        rows = sorted(rows, key=lambda r: r[0])
     with open(path, "wb") as f:
         f.write(struct.pack("<4s4I", b"WDBC", len(rows), fields, fields * 4, len(strings)))
         for r in rows:
@@ -224,6 +227,34 @@ def template(rows, row_id, what):
 def upsert(rows, row):
     rows[:] = [r for r in rows if r[0] != row[0]]
     rows.append(row)
+
+
+def replace_or_append(rows, row):
+    """Like upsert, but a row that is already there keeps its place in the file."""
+    at = next((i for i, r in enumerate(rows) if r[0] == row[0]), None)
+    if at is None:
+        rows.append(row)
+    else:
+        rows[at] = row
+
+
+def series_breaks(rows):
+    """Achievement.dbc stages the achievement window would list on their own. Wow.exe
+    (GetCategoryNumAchievements 0x5B38E0) hides a series' unfinished stages in one walk over the
+    file in order: a stage stays hidden only if its predecessor (Supercedes, field 3) is the row it
+    listed last in that category, as each faction sees it. Blizzard's file keeps every stage right
+    after its predecessor; sorted by id, about 54 stray stages show on a new character."""
+    ids = {r[0] for r in rows}
+    found = []
+    for faction in (0, 1):
+        last = {}
+        for r in rows:
+            if r[1] not in (UNSET, faction) or r[41] & 0x802 or r[38] == ACHIEVEMENT_CATEGORY_FEATS_OF_STRENGTH:
+                continue                         # other faction, hidden, or listed only once earned
+            if r[3] in ids and last.get(r[38]) != r[3]:
+                found.append(r[0])
+            last[r[38]] = r[0]
+    return found
 
 
 # --- MPQ ---------------------------------------------------------------------------------------
@@ -524,6 +555,11 @@ def add_achievements(files, pets, args, tmp):
         tables[table] = (table_rows, strings, fields)
     achievements, ach_str, _ = tables["Achievement"]
     criteria, crit_str, _ = tables["Achievement_Criteria"]
+    breaks = series_breaks(achievements)
+    if breaks:
+        sys.exit("Achievement.dbc isn't in Blizzard's row order (%d series stages out of place, e.g. %d), "
+                 "so the client would list every stage; restore it first with wow-server's "
+                 "tools/client-patches/achievement_order.py" % (len(breaks), breaks[0]))
 
     for p in rows:
         criterion = p["achievement"] + ACHIEVEMENT_CRITERIA_OFFSET
@@ -546,7 +582,7 @@ def add_achievements(files, pets, args, tmp):
         row[40] = ACHIEVEMENT_UI_ORDER + pets.index(p)
         row[42] = p["spell"]                             # SpellIcon: the spell's own icon
         row[59] = LANG_MASK_EMPTY                        # no reward text
-        upsert(achievements, row)
+        replace_or_append(achievements, row)
 
         row = [0] * CRITERIA_FIELDS
         row[0] = criterion
@@ -557,10 +593,10 @@ def add_achievements(files, pets, args, tmp):
         row[25] = LANG_MASK
         row[26] = CRITERIA_FLAG_HIDDEN
         row[30] = 1                                      # Ui_Order
-        upsert(criteria, row)
+        replace_or_append(criteria, row)
 
     for table, (table_rows, strings, fields) in tables.items():
-        write_dbc(files["DBFilesClient\\%s.dbc" % table], table_rows, strings, fields)
+        write_dbc(files["DBFilesClient\\%s.dbc" % table], table_rows, strings, fields, keep_order=True)
 
 
 # --- SQL ---------------------------------------------------------------------------------------
