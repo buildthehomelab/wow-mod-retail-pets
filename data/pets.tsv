@@ -91,3 +91,12 @@ display	retail_display	variant	form	tier	model	name	textures	creature	spell	item
 344163			flyer	18		Sunflare Driftmoth		9502167	90667	90667	7949372	inv_mothfluffymount_orange	1	4	0	0	Summons and dismisses a rideable Sunflare Driftmoth. It flies where flying mounts can.					
 342462			flyer	18		Zothwing Darkseeker		9502168	90668	90668	7673157	inv_oldgodraymount_blue	1	4	0	0	Summons and dismisses a rideable Zothwing Darkseeker. It flies where flying mounts can.					
 342463			flyer	18		Zothwing Deepseeker		9502169	90669	90669	7673158	inv_oldgodraymount_purple	1	4	0	0	Summons and dismisses a rideable Zothwing Deepseeker. It flies where flying mounts can.					
+280357			mount	1		Seabraid Stallion		9502170	90670	90670	1720723	inv_dressedhorse	1	4	0	0	Summons and dismisses a rideable Seabraid Stallion.					
+280358			mount	1		Gilded Ravasaur		9502171	90671	90671	1719260	inv_armoredraptor	1	4	0	0	Summons and dismisses a rideable Gilded Ravasaur.					
+264582			mount	3		Illidari Felstalker		9502172	90672	90672	1113192	inv_felstalkermount	1	4	0	0	Summons and dismisses a rideable Illidari Felstalker.					
+304790			mount	4		Armored Siege Kodo		9502173	90673	90673	4201986	inv_kodomount	1	4	0	0	Summons and dismisses a rideable Armored Siege Kodo.					
+243254			flyer	8		Imperial Quilen		9502174	90674	90674	644374	ability_mount_quilenflyingmount	1	4	0	0	Summons and dismisses a rideable Imperial Quilen. It flies where flying mounts can.					
+292345			flyer	10		Alabaster Stormtalon		9502175	90675	90675	2957417	inv_encrypted21	1	4	0	0	Summons and dismisses a rideable Alabaster Stormtalon. It flies where flying mounts can.					
+292344			flyer	10		Alabaster Thunderwing		9502176	90676	90676	2974019	inv_encrypted22	1	4	0	0	Summons and dismisses a rideable Alabaster Thunderwing. It flies where flying mounts can.					
+300427			flyer	12		Sapphire Skyblazer		9502177	90677	90677	3851476	inv_phoenix2mount_blue	1	4	0	0	Summons and dismisses a rideable Sapphire Skyblazer. It flies where flying mounts can.					
+304779			flyer	12		Ash'adar, Harbinger of Dawn		9502178	90678	90678	4220140	ability_nightsaber2mountsunmoon	1	4	0	0	Summons and dismisses a rideable Ash'adar, Harbinger of Dawn. It flies where flying mounts can.					
