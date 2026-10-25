@@ -19,14 +19,14 @@ Rustpaw**, a red panda breeder on the Booty Bay boardwalk.
 | **Whoofle Bramblewing** | A plump little owl with a warm glow, retail's shop mount. A mount that flies, a druid's Flight Form look, and the achievement **Owl Be Seeing You** |
 | **Armadillo Pup**, **Dark Phoenix Hatchling**, **Lil' Tarecgosa** (companions) | Cataclysm's guild reward pets |
 | **Golden King**, **Kor'kron Annihilator** (mounts), **Dark Phoenix** (a mount that flies) | Cataclysm's guild reward mounts: a golden lion, a scorpion, a shadowy phoenix |
-| **69 retail shop mounts**: the Grrlocs, Chaos-Forged mounts, Furlines, Grovegliders, Great Ravens, Witchwick's Riders, Witch's Sweepers, Zothwings, Arboons, Celestials, the Lunar New Year mounts, Heart of the Aspects, the Trader's Gilded Brutosaur and more | Retail's in-game shop mounts. 61 are flyers; the Grrlocs, the Brutosaur, the Wandering Caravan, the Packmaster and the Hermit Crab stay on the ground |
+| **78 retail shop mounts**: the Grrlocs, Chaos-Forged mounts, Furlines, Grovegliders, Great Ravens, Witchwick's Riders, Witch's Sweepers, Zothwings, Arboons, Celestials, the Lunar New Year mounts, Heart of the Aspects, the Imperial Quilen, the Alabaster mounts, the Trader's Gilded Brutosaur and more | Retail's in-game shop mounts. 66 are flyers; the Grrlocs, the Brutosaur, the Wandering Caravan, the Packmaster, the Hermit Crab, the Seabraid Stallion, the Gilded Ravasaur, the Illidari Felstalker and the Armored Siege Kodo stay on the ground |
 
 These items have no vendor: hand them out some other way, such as a shop (the launcher shop of
 [mod-boss-coins](https://github.com/buildthehomelab/wow-mod-boss-coins) has Whoofle Bramblewing
-for free, and the 69 retail shop mounts, 90600-90669 (90653 left free), each unlocked by a progression phase), a
+for free, and the 78 retail shop mounts, 90600-90678 (90653 left free), each unlocked by a progression phase), a
 reward or a GM's `.additem 90215`. The guild vendors of
 [mod-guild-levels](https://github.com/buildthehomelab/wow-mod-guild-levels) sell the six guild
-reward pets and mounts (90216-90221). Those six and the 69 shop mounts wear looks from
+reward pets and mounts (90216-90221). Those six and the 78 shop mounts wear looks from
 [mod-retail-library](https://github.com/buildthehomelab/wow-mod-retail-library) (200000 + the
 retail display, such as 236220 for the Armadillo Pup) and have no model in this module's patch,
 so they need that module and its patches.
@@ -40,7 +40,7 @@ a stock 100% mount, so they are epic-speed mounts unless the server scales mount
 (such as [mod-mount-scaling](https://github.com/buildthehomelab/wow-mod-mount-scaling), which
 treats them like every other ground mount).
 
-Whoofle Bramblewing is a **flyer**, like retail's mounts (and so are 61 of the shop mounts and the Dark Phoenix): the same ground mount, and once its
+Whoofle Bramblewing is a **flyer**, like retail's mounts (and so are 66 of the shop mounts and the Dark Phoenix): the same ground mount, and once its
 rider has Expert Riding (225) it also flies, at +150%, or +280% with Artisan Riding (300), wherever
 a stock flying mount can (Outland, and Northrend with Cold Weather Flying). The module's script
 (`src/RetailPetsFlyer.cpp`) gives the rider one of two server-only flight auras, 90230 or 90231,
@@ -100,6 +100,9 @@ Category: Collections
   **Rufflefur**, **Softpaw**, **Teatuft** and **Brewthief**.
 - **69 more retail mounts**, from Grrlocs to Chaos-Forged gryphons and Witchwick's Riders. Most
   of them fly, wherever flying mounts can. Nari doesn't sell them: they come from the realm's shop.
+- **9 more shop mounts**: the **Imperial Quilen**, the **Alabaster Stormtalon** and
+  **Thunderwing**, the **Sapphire Skyblazer**, **Ash'adar, Harbinger of Dawn**, the **Seabraid
+  Stallion**, the **Gilded Ravasaur**, the **Illidari Felstalker** and the **Armored Siege Kodo**.
 - Companions appear on the Pets tab and mounts on the Mounts tab once learned, like any other.
 - The **Meeksi** mounts' teapots steam and bubble, and **Whoofle Bramblewing** gives off embers,
   smoke and puffs of flame, and leaves glowing trails.
@@ -191,11 +194,11 @@ All in the world database, all from `data/pets.tsv`:
 
 | Table | Rows |
 |---|---|
-| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview, 9502017-9502022 the guild reward pets and mounts, 9502100-9502169 the shop mounts |
-| `spell_dbc`, `skilllineability_dbc` | 90200-90221 and 90600-90669: the summon spells |
-| `spell_script_names` | the flyer script on the flyers' spells: 90215 (Whoofle Bramblewing), 90221 (the Dark Phoenix) and 61 of the shop mounts' |
+| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview, 9502017-9502022 the guild reward pets and mounts, 9502100-9502178 the shop mounts |
+| `spell_dbc`, `skilllineability_dbc` | 90200-90221 and 90600-90678: the summon spells |
+| `spell_script_names` | the flyer script on the flyers' spells: 90215 (Whoofle Bramblewing), 90221 (the Dark Phoenix) and 66 of the shop mounts' |
 | `spell_dbc` | 90230-90231: the flyers' flight auras (server only) |
-| `item_template`, `npc_vendor` | 90200-90221 and 90600-90669: the items; Nari Rustpaw sells 90200-90214 |
+| `item_template`, `npc_vendor` | 90200-90221 and 90600-90678: the items; Nari Rustpaw sells 90200-90214 |
 | `achievement_dbc`, `achievement_criteria_dbc` | 9215 and criterion 19215: Owl Be Seeing You (the module keeps 9200-9229 and 19200-19229) |
 | `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97016: Whoofle Bramblewing (no saddle) as a flight form look, unlocked by spell 90215 |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
