@@ -100,3 +100,5 @@ display	retail_display	variant	form	tier	model	name	textures	creature	spell	item
 292344			flyer	10		Alabaster Thunderwing		9502176	90676	90676	2974019	inv_encrypted22	1	4	0	0	Summons and dismisses a rideable Alabaster Thunderwing. It flies where flying mounts can.					
 300427			flyer	12		Sapphire Skyblazer		9502177	90677	90677	3851476	inv_phoenix2mount_blue	1	4	0	0	Summons and dismisses a rideable Sapphire Skyblazer. It flies where flying mounts can.					
 304779			flyer	12		Ash'adar, Harbinger of Dawn		9502178	90678	90678	4220140	ability_nightsaber2mountsunmoon	1	4	0	0	Summons and dismisses a rideable Ash'adar, Harbinger of Dawn. It flies where flying mounts can.					
+97017	127847		look	0	ravenmount	Prophet's Great Raven		9502023	90646				1					flight				m1
+97018	127885		look	0	ravenmount	Archmage's Great Raven		9502024	90641				1					flight				m1

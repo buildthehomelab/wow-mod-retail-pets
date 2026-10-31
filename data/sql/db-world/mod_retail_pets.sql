@@ -4,8 +4,8 @@
 
 -- The pets and the mounts' creatures, and the form looks' preview creatures.
 DELETE FROM `creature` WHERE `guid` IN (9502090);
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502017, 9502018, 9502019, 9502020, 9502021, 9502022, 9502100, 9502101, 9502102, 9502103, 9502104, 9502105, 9502106, 9502107, 9502108, 9502109, 9502110, 9502111, 9502112, 9502113, 9502114, 9502115, 9502116, 9502117, 9502118, 9502119, 9502120, 9502121, 9502122, 9502123, 9502124, 9502125, 9502126, 9502127, 9502128, 9502129, 9502130, 9502131, 9502132, 9502133, 9502134, 9502135, 9502136, 9502137, 9502138, 9502139, 9502140, 9502141, 9502142, 9502143, 9502144, 9502145, 9502146, 9502147, 9502148, 9502149, 9502150, 9502151, 9502152, 9502154, 9502155, 9502156, 9502157, 9502158, 9502159, 9502160, 9502161, 9502162, 9502163, 9502164, 9502165, 9502166, 9502167, 9502168, 9502169, 9502170, 9502171, 9502172, 9502173, 9502174, 9502175, 9502176, 9502177, 9502178, 9502016, 9502090);
-DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502017, 9502018, 9502019, 9502020, 9502021, 9502022, 9502100, 9502101, 9502102, 9502103, 9502104, 9502105, 9502106, 9502107, 9502108, 9502109, 9502110, 9502111, 9502112, 9502113, 9502114, 9502115, 9502116, 9502117, 9502118, 9502119, 9502120, 9502121, 9502122, 9502123, 9502124, 9502125, 9502126, 9502127, 9502128, 9502129, 9502130, 9502131, 9502132, 9502133, 9502134, 9502135, 9502136, 9502137, 9502138, 9502139, 9502140, 9502141, 9502142, 9502143, 9502144, 9502145, 9502146, 9502147, 9502148, 9502149, 9502150, 9502151, 9502152, 9502154, 9502155, 9502156, 9502157, 9502158, 9502159, 9502160, 9502161, 9502162, 9502163, 9502164, 9502165, 9502166, 9502167, 9502168, 9502169, 9502170, 9502171, 9502172, 9502173, 9502174, 9502175, 9502176, 9502177, 9502178, 9502016, 9502090);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502017, 9502018, 9502019, 9502020, 9502021, 9502022, 9502100, 9502101, 9502102, 9502103, 9502104, 9502105, 9502106, 9502107, 9502108, 9502109, 9502110, 9502111, 9502112, 9502113, 9502114, 9502115, 9502116, 9502117, 9502118, 9502119, 9502120, 9502121, 9502122, 9502123, 9502124, 9502125, 9502126, 9502127, 9502128, 9502129, 9502130, 9502131, 9502132, 9502133, 9502134, 9502135, 9502136, 9502137, 9502138, 9502139, 9502140, 9502141, 9502142, 9502143, 9502144, 9502145, 9502146, 9502147, 9502148, 9502149, 9502150, 9502151, 9502152, 9502154, 9502155, 9502156, 9502157, 9502158, 9502159, 9502160, 9502161, 9502162, 9502163, 9502164, 9502165, 9502166, 9502167, 9502168, 9502169, 9502170, 9502171, 9502172, 9502173, 9502174, 9502175, 9502176, 9502177, 9502178, 9502016, 9502023, 9502024, 9502090);
+DELETE FROM `creature_template` WHERE `entry` IN (9502000, 9502001, 9502002, 9502003, 9502004, 9502005, 9502006, 9502007, 9502008, 9502009, 9502010, 9502011, 9502012, 9502013, 9502014, 9502015, 9502017, 9502018, 9502019, 9502020, 9502021, 9502022, 9502100, 9502101, 9502102, 9502103, 9502104, 9502105, 9502106, 9502107, 9502108, 9502109, 9502110, 9502111, 9502112, 9502113, 9502114, 9502115, 9502116, 9502117, 9502118, 9502119, 9502120, 9502121, 9502122, 9502123, 9502124, 9502125, 9502126, 9502127, 9502128, 9502129, 9502130, 9502131, 9502132, 9502133, 9502134, 9502135, 9502136, 9502137, 9502138, 9502139, 9502140, 9502141, 9502142, 9502143, 9502144, 9502145, 9502146, 9502147, 9502148, 9502149, 9502150, 9502151, 9502152, 9502154, 9502155, 9502156, 9502157, 9502158, 9502159, 9502160, 9502161, 9502162, 9502163, 9502164, 9502165, 9502166, 9502167, 9502168, 9502169, 9502170, 9502171, 9502172, 9502173, 9502174, 9502175, 9502176, 9502177, 9502178, 9502016, 9502023, 9502024, 9502090);
 INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `movementId`, `flags_extra`) VALUES
 (9502000, 'Red Panda', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
 (9502001, 'Red Panda Backpacker', 1, 1, 188, 1, 1.14286, 2000, 2000, 1, 768, 2048, 12, 121, 2),
@@ -107,7 +107,9 @@ INSERT INTO `creature_template` (`entry`, `name`, `minlevel`, `maxlevel`, `facti
 (9502176, 'Alabaster Thunderwing', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
 (9502177, 'Sapphire Skyblazer', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
 (9502178, 'Ash\'adar, Harbinger of Dawn', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
-(9502016, 'Whoofle Bramblewing', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0);
+(9502016, 'Whoofle Bramblewing', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
+(9502023, 'Prophet\'s Great Raven', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0),
+(9502024, 'Archmage\'s Great Raven', 1, 1, 35, 1, 1.14286, 2000, 2000, 1, 0, 2048, 1, 140, 0);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
 (9502000, 0, 97000, 0.8, 1),
 (9502001, 0, 97001, 0.8, 1),
@@ -209,7 +211,9 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 (9502176, 0, 292344, 1, 1),
 (9502177, 0, 300427, 1, 1),
 (9502178, 0, 304779, 1, 1),
-(9502016, 0, 97016, 1, 1);
+(9502016, 0, 97016, 1, 1),
+(9502023, 0, 97017, 1, 1),
+(9502024, 0, 97018, 1, 1);
 
 -- Who sells them: friendly to everyone, can't be attacked, a vendor (with a greeting first, if it has one).
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `flags_extra`) VALUES
@@ -665,7 +669,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 (23, 9502090, 90214, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Meeksi Brewthief is sold once the player has cleared progression phase 8');
 
 -- The model patch's CreatureDisplayInfo and CreatureModelData rows, for the server's DBC stores.
-DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015, 97016);
+DELETE FROM `creaturedisplayinfo_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015, 97016, 97017, 97018);
 INSERT INTO `creaturedisplayinfo_dbc` (`ID`, `ModelID`, `SoundID`, `ExtendedDisplayInfoID`, `CreatureModelScale`, `CreatureModelAlpha`, `TextureVariation_1`, `TextureVariation_2`, `TextureVariation_3`, `PortraitTextureName`, `BloodLevel`, `BloodID`, `NPCSoundID`, `ParticleColorID`, `CreatureGeosetData`, `ObjectEffectPackageID`) VALUES
 (97000, 97000, 0, 0, 1, 255, 'T774110', '', '', '', 0, 0, 163, 0, 0, 0),
 (97001, 97001, 0, 0, 0.75, 255, 'T6310493', '', '', '', 0, 0, 163, 0, 0, 0),
@@ -683,15 +687,18 @@ INSERT INTO `creaturedisplayinfo_dbc` (`ID`, `ModelID`, `SoundID`, `ExtendedDisp
 (97013, 97002, 0, 0, 1.2, 255, 'T6256782', 'T6256794', 'T6256788', '', 1, 0, 0, 0, 0, 0),
 (97014, 97002, 0, 0, 1.2, 255, 'T6256784', 'T6256795', 'T6256790', '', 1, 0, 0, 2404, 0, 0),
 (97015, 97003, 0, 0, 1, 255, '', '', '', '', 2, 0, 0, 0, 0, 0),
-(97016, 97004, 0, 0, 1, 255, '', '', '', '', 2, 0, 0, 0, 0, 0);
-DELETE FROM `creaturemodeldata_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004);
+(97016, 97004, 0, 0, 1, 255, '', '', '', '', 2, 0, 0, 0, 0, 0),
+(97017, 97005, 0, 0, 1, 255, 'T6705372', 'T6706523', '', '', 2, 0, 0, 0, 0, 0),
+(97018, 97005, 0, 0, 1, 255, 'T6705371', 'T6706524', '', '', 2, 0, 0, 0, 0, 0);
+DELETE FROM `creaturemodeldata_dbc` WHERE `ID` IN (97000, 97001, 97002, 97003, 97004, 97005);
 INSERT INTO `creaturemodeldata_dbc` (`ID`, `Flags`, `ModelName`, `SizeClass`, `ModelScale`, `BloodID`, `FootprintTextureID`, `FootprintTextureLength`, `FootprintTextureWidth`, `FootprintParticleScale`, `FoleyMaterialID`, `FootstepShakeSize`, `DeathThudShakeSize`, `SoundID`, `CollisionWidth`, `CollisionHeight`, `MountHeight`, `GeoBoxMinX`, `GeoBoxMinY`, `GeoBoxMinZ`, `GeoBoxMaxX`, `GeoBoxMaxY`, `GeoBoxMaxZ`, `WorldEffectScale`, `AttachedEffectScale`, `MissileCollisionRadius`, `MissileCollisionPush`, `MissileCollisionRaise`) VALUES
 (97000, 0, 'Creature\\RetailPets\\RedPanda\\RedPanda.mdx', 0, 1, 1, 7, 10, 6, 1, 0, 0, 0, 1469, 0.611111, 2.03128, 0.462593, -1.21839, -0.259978, -0.093385, 0.495662, 0.276689, 0.695761, 1, 1, 0, 0, 0),
 (97001, 0, 'Creature\\RetailPets\\RedPandaBackpacker\\RedPandaBackpacker.mdx', 0, 1, 1, 7, 10, 6, 1, 0, 0, 0, 1469, 0.611111, 2.03128, 0, -1.02305, -0.533998, -0.0407019, 0.33661, 0.532239, 1.4624, 1, 1, 0, 0, 0),
 (97002, 0, 'Creature\\RetailPets\\RedPandaMount\\RedPandaMount.mdx', 1, 1, -1, 7, 18, 12, 2, 0, 0, 0, 2499, 0.611111, 2.03128, 2.11116, -4.53993, -1.04993, -0.0723111, 1.51247, 1.05826, 3.35619, 1, 1, 0, 0, 0),
 (97003, 0, 'Creature\\RetailPets\\PigmyOwlMount\\PigmyOwlMount.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.61186, -2.82588, -1.10715, -0.489358, 1.14963, 1.04463, 2.12517, 1, 1, 0, 0, 0),
-(97004, 0, 'Creature\\RetailPets\\PigmyOwlMount\\PigmyOwlMount_da7111.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.61186, -2.82588, -1.10715, -0.489358, 1.14963, 1.04463, 2.12517, 1, 1, 0, 0, 0);
-DELETE FROM `creature_model_info` WHERE `DisplayID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015, 97016);
+(97004, 0, 'Creature\\RetailPets\\PigmyOwlMount\\PigmyOwlMount_da7111.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.61186, -2.82588, -1.10715, -0.489358, 1.14963, 1.04463, 2.12517, 1, 1, 0, 0, 0),
+(97005, 0, 'Creature\\RetailPets\\Ravenmount\\Ravenmount.mdx', 0, 1, 3, 5, 24, 16, 1, 0, 0, 0, 2500, 0.611111, 2.03128, 1.09048, -4.5176, -0.832838, -0.0791643, 1.59092, 0.904111, 2.72901, 1, 1, 0, 0, 0);
+DELETE FROM `creature_model_info` WHERE `DisplayID` IN (97000, 97001, 97002, 97003, 97004, 97005, 97006, 97007, 97008, 97009, 97010, 97011, 97012, 97013, 97014, 97015, 97016, 97017, 97018);
 INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`) VALUES
 (97000, 0.25, 0.5, 2, 0),
 (97001, 0.25, 0.5, 2, 0),
@@ -709,7 +716,9 @@ INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`,
 (97013, 1.45, 1.5, 2, 0),
 (97014, 1.45, 1.5, 2, 0),
 (97015, 1.45, 1.5, 2, 0),
-(97016, 1.45, 1.5, 2, 0);
+(97016, 1.45, 1.5, 2, 0),
+(97017, 1.45, 1.5, 2, 0),
+(97018, 1.45, 1.5, 2, 0);
 
 -- Druid form looks for mod-transmog-plus: a character who knows the mount has the form.
 -- That module owns the two tables; they are made here too so this file applies first.
@@ -730,6 +739,10 @@ CREATE TABLE IF NOT EXISTS `mod_transmog_plus_form_spells` (
 DELETE FROM `mod_transmog_plus_form_spells` WHERE `DisplayId` BETWEEN 97000 AND 97099;
 DELETE FROM `mod_transmog_plus_forms` WHERE `DisplayId` BETWEEN 97000 AND 97099;
 INSERT INTO `mod_transmog_plus_forms` (`DisplayId`, `Form`, `Name`, `UnlockPhase`, `PreviewCreature`, `SortOrder`) VALUES
-(97016, 'flight', 'Whoofle Bramblewing', 0, 9502016, 100001);
+(97016, 'flight', 'Whoofle Bramblewing', 0, 9502016, 100001),
+(97017, 'flight', 'Prophet\'s Great Raven', 0, 9502023, 100002),
+(97018, 'flight', 'Archmage\'s Great Raven', 0, 9502024, 100003);
 INSERT INTO `mod_transmog_plus_form_spells` (`DisplayId`, `SpellId`) VALUES
-(97016, 90215);
+(97016, 90215),
+(97017, 90646),
+(97018, 90641);

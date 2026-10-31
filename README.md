@@ -51,7 +51,9 @@ server that scales flying speed (mod-mount-scaling) scales those too.
 (1.12.0 or later), the owl is also a Flight Form look in its Forms tab: a druid who knows the
 mount has the look, and gets a chat line when they learn it. Druids who don't see it locked,
 with what it comes with. The form is the owl without its saddle: a model of its own (display
-97016), so the mount keeps the saddle.
+97016), so the mount keeps the saddle. The two **Great Ravens** of the shop work the same way:
+Prophet's (black) and Archmage's (white) Great Raven bring a Flight Form look of the raven
+without its saddle, straps and bags, keeping the jacket (displays 97017 and 97018).
 
 **Achievement.** Learning the owl earns **Owl Be Seeing You** (Feats of Strength, no points). With
 mod-accountwide-mounts, the account's other characters learn the mount, and earn it, as they
@@ -194,19 +196,19 @@ All in the world database, all from `data/pets.tsv`:
 
 | Table | Rows |
 |---|---|
-| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview, 9502017-9502022 the guild reward pets and mounts, 9502100-9502178 the shop mounts |
+| `creature_template`, `creature_template_model` | 9502000-9502009 the pets, 9502010-9502015 the mounts, 9502016 the owl flight form's preview, 9502017-9502022 the guild reward pets and mounts, 9502023-9502024 the Great Raven flight forms' previews, 9502100-9502178 the shop mounts |
 | `spell_dbc`, `skilllineability_dbc` | 90200-90221 and 90600-90678: the summon spells |
 | `spell_script_names` | the flyer script on the flyers' spells: 90215 (Whoofle Bramblewing), 90221 (the Dark Phoenix) and 66 of the shop mounts' |
 | `spell_dbc` | 90230-90231: the flyers' flight auras (server only) |
 | `item_template`, `npc_vendor` | 90200-90221 and 90600-90678: the items; Nari Rustpaw sells 90200-90214 |
 | `achievement_dbc`, `achievement_criteria_dbc` | 9215 and criterion 19215: Owl Be Seeing You (the module keeps 9200-9229 and 19200-19229) |
-| `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97016: Whoofle Bramblewing (no saddle) as a flight form look, unlocked by spell 90215 |
+| `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97016: Whoofle Bramblewing (no saddle) as a flight form look, unlocked by spell 90215; 97017 and 97018: Prophet's and Archmage's Great Raven (no saddle), unlocked by 90646 and 90641 |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
 | `creature_template`, `creature_template_model`, `creature` | 9502090: Nari Rustpaw and her spawn (guid 9502090) in Booty Bay |
 | `gossip_menu`, `gossip_menu_option`, `npc_text` | menu 9502090 and texts 9502090-9502091: her two greetings and the option that opens her window |
 | `conditions` | gossip conditions (source type 14) on menu 9502090: which greeting a player gets |
-| `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97016: the model patch's displays |
-| `creaturemodeldata_dbc` | 97000-97004: the model patch's five models |
+| `creaturedisplayinfo_dbc`, `creature_model_info` | 97000-97018: the model patch's displays |
+| `creaturemodeldata_dbc` | 97000-97005: the model patch's six models |
 
 A pet or mount has the same last digits everywhere: row 5 of the list is creature 9502005,
 spell and item 90205 and display 97005 (from the guild rewards on, the creature is one ahead:
@@ -238,7 +240,7 @@ The first eight are what wow-mod-retail-creatures reads; the rest are this modul
 | `vendor` | `creature_template` entry of the NPC that sells the item: one of `data/vendors.tsv`, or a creature the server already has; `0` for none |
 | `summon_text` | description of the summon spell |
 | `druid_form` | empty, or the druid form (`flight`, `travel`, ...) the model is also a mod-transmog-plus look for, unlocked by knowing the spell |
-| `hide` | empty, or retail texture file ids (comma-separated) whose meshes the builder leaves out, giving the row a model of its own: the owl flight form leaves out the saddle (7768244) |
+| `hide` | empty, or retail texture file ids (comma-separated) whose meshes the builder leaves out, giving the row a model of its own: the owl flight form leaves out the saddle (7768244). `m<n>` names a mesh instead (skin section n), for a saddle drawn with the body's own texture: the Great Ravens' is `m1` |
 | `achievement`, `achievement_name`, `achievement_text` | empty, or an achievement for learning the spell: its id (9200-9229; the criterion is id + 10000), title and description |
 
 ## Columns of data/vendors.tsv
