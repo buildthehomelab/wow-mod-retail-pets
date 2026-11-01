@@ -181,7 +181,8 @@ module's SQL.
 
 ```bash
 python3 tools/build_pets.py --patch-w patch-W.MPQ --patch-z patch-Z.MPQ --client /path/to/client \
-    --cache ~/creatures-cache --out patch-W-new.MPQ --sql data/sql/db-world/mod_retail_pets.sql
+    --cache ~/creatures-cache --sound-dbc <z40's sound tables> --out patch-W-new.MPQ \
+    --sql data/sql/db-world/mod_retail_pets.sql
 ```
 
 It copies `patch-W.MPQ`, adds the pets' and mounts' rows and icons to it and writes
@@ -189,6 +190,16 @@ It copies `patch-W.MPQ`, adds the pets' and mounts' rows and icons to it and wri
 spell patch has no `SpellIcon.dbc`, `Achievement.dbc` or `Achievement_Criteria.dbc`, the
 client's own copy is the base. Running it again on its
 own output changes nothing.
+
+Each mount summons with retail's own sound for it, not the Amani War Bear's roar it would copy:
+its spell gets a SpellVisual of its own through
+[wow-mod-retail-creatures](https://github.com/buildthehomelab/wow-mod-retail-creatures)'
+`spell_sounds.py` (block `pets`; `--creatures` is that repo's checkout, default next to this
+one). A mount retail plays no summon sound for gets its creature's aggro sound, and a few have
+neither and summon silently. The sounds are `SoundEntries.dbc` rows in the spell patch, built on
+`--sound-dbc`: a folder with the `SoundEntries.dbc` and `CreatureSoundData.dbc` the client has
+before that patch. A patch that loads later and carries `SoundEntries.dbc` too is built on the
+spell patch's copy.
 
 ## What it adds to the database
 
