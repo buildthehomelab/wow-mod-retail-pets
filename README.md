@@ -55,6 +55,16 @@ with what it comes with. The form is the owl without its saddle: a model of its 
 Prophet's (black) and Archmage's (white) Great Raven bring a Flight Form look of the raven
 without its saddle, straps and bags, keeping the jacket (displays 97017 and 97018).
 
+**Wings & Wisdom gear.** The Great Ravens come with retail's Wings & Wisdom looks, items of their
+own here (data/gear.tsv): for each raven a **Feathered Cowl**, **Feathered Mantle** and
+**Feathered Drape** of the Prophet or the Archmage, and its **Standard**, a staff (90690-90697).
+They have no stats: they are looks to wear, or to collect with mod-transmog-plus. The cowl and
+the mantle are Miscellaneous armour, so anyone can wear them; the standard needs staves. The
+coin shop of mod-boss-coins mails them with the raven, to the character it is bought for.
+Their models are retail's, converted for the client: the cowl has one per race and sex (it hides
+the hair, and the ears of all but the elves and trolls, like a stock hood); the drape is a
+texture on the character's own cloak.
+
 **Achievement.** Learning the owl earns **Owl Be Seeing You** (Feats of Strength, no points). With
 mod-accountwide-mounts, the account's other characters learn the mount, and earn it, as they
 log in. It is an Achievement.dbc row in the spell patch, the same row in `achievement_dbc`, and
@@ -105,6 +115,8 @@ Category: Collections
 - **9 more shop mounts**: the **Imperial Quilen**, the **Alabaster Stormtalon** and
   **Thunderwing**, the **Sapphire Skyblazer**, **Ash'adar, Harbinger of Dawn**, the **Seabraid
   Stallion**, the **Gilded Ravasaur**, the **Illidari Felstalker** and the **Armored Siege Kodo**.
+- The **Prophet's** and the **Archmage's Great Raven** come with retail's **Wings & Wisdom** looks:
+  a feathered cowl, mantle and drape and a standard for each, to wear or collect for transmog.
 - Companions appear on the Pets tab and mounts on the Mounts tab once learned, like any other.
 - The **Meeksi** mounts' teapots steam and bubble, and **Whoofle Bramblewing** gives off embers,
   smoke and puffs of flame, and leaves glowing trails.
@@ -190,6 +202,20 @@ spell patch has no `SpellIcon.dbc`, `Achievement.dbc` or `Achievement_Criteria.d
 client's own copy is the base. Running it again on its
 own output changes nothing.
 
+**3. The gear.**
+
+```bash
+python3 tools/build_gear.py --patch patch-W.MPQ --client /path/to/client \
+    --cache ~/creatures-cache --out patch-W-new.MPQ --sql data/sql/db-world/mod_retail_pets_gear.sql
+```
+
+It copies the spell patch and adds the gear of `data/gear.tsv` to it: Item.dbc and
+ItemDisplayInfo.dbc rows appended after every old row, the converted models under
+`Item\ObjectComponents` (named `Evermore_*`), their textures and the retail icons Blizzard's
+client doesn't have. It needs wow-mod-retail-creatures next to this repo (or `RETAIL_CREATURES`)
+for the converter. It writes `data/sql/db-world/mod_retail_pets_gear.sql`, the items. Running
+it again on its own output changes nothing.
+
 ## What it adds to the database
 
 All in the world database, all from `data/pets.tsv`:
@@ -201,6 +227,7 @@ All in the world database, all from `data/pets.tsv`:
 | `spell_script_names` | the flyer script on the flyers' spells: 90215 (Whoofle Bramblewing), 90221 (the Dark Phoenix) and 66 of the shop mounts' |
 | `spell_dbc` | 90230-90231: the flyers' flight auras (server only) |
 | `item_template`, `npc_vendor` | 90200-90221 and 90600-90678: the items; Nari Rustpaw sells 90200-90214 |
+| `item_template` | 90690-90697: the Wings & Wisdom gear (from `data/gear.tsv`, its own SQL file) |
 | `achievement_dbc`, `achievement_criteria_dbc` | 9215 and criterion 19215: Owl Be Seeing You (the module keeps 9200-9229 and 19200-19229) |
 | `mod_transmog_plus_forms`, `mod_transmog_plus_form_spells` | 97016: Whoofle Bramblewing (no saddle) as a flight form look, unlocked by spell 90215; 97017 and 97018: Prophet's and Archmage's Great Raven (no saddle), unlocked by 90646 and 90641 |
 | `conditions` | vendor conditions (source type 23) on those items: the progression phase each one waits for |
@@ -216,7 +243,7 @@ spell and item 90205 and display 97005 (from the guild rewards on, the creature 
 them is creature 9502100 + n, spell and item 90600 + n. A row wearing a mod-retail-library look keeps that
 library's display id (200000 + the retail display) and leaves `retail_display` empty, so the
 model patch skips it and the SQL leaves its display rows to the library. Reserved for more: creatures 9502000-9502099 (vendors
-from 9502090, and their gossip menus and texts) and 9502100-9502199, spells and items 90200-90229 and 90600-90699, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
+from 9502090, and their gossip menus and texts) and 9502100-9502199, spells and items 90200-90229 and 90600-90689, gear items and their item displays 90690-90699, displays and models 97000-97099. In the client patches the spell icon and the skill line row use the spell's
 id, and the item display uses the item's.
 
 ## Columns of data/pets.tsv
