@@ -3,7 +3,8 @@
 patch and the module's world database SQL.
 
     python3 build_pets.py --patch-w patch-W.MPQ --patch-z patch-Z.MPQ --client /path/to/client \\
-        --cache <download dir> --out patch-W-new.MPQ --sql ../data/sql/db-world/mod_retail_pets.sql
+        --cache <download dir> --sound-dbc <z40's sound tables> --out patch-W-new.MPQ \\
+        --sql ../data/sql/db-world/mod_retail_pets.sql
 
 The models are a separate patch (patch-Z.MPQ), built first from this repo's pack.json by
 wow-mod-retail-creatures' tools/build_patch.py. This tool does the rest.
@@ -22,6 +23,15 @@ the new rows go into its copies; every other file in it is copied unchanged. Per
 - Interface\\Icons\\<icon>.blp, downloaded from wago.tools into --cache.
 
 The spell icon and the SkillLineAbility row use the spell's id, the item display uses the item's.
+
+A mount summons with retail's own sound for it, not the Amani War Bear's roar: its spell gets a
+SpellVisual of its own, the bear's with retail's summon sounds in place of the roar, through
+wow-mod-retail-creatures' spell_sounds.py (block "pets"; --creatures is that repo's checkout,
+default next to this one). Retail's mount is the one that wears the row's retail display (its
+own model's, or the library look's); a mount retail plays no summon sound for gets that
+creature's aggro sound. The sounds are SoundEntries rows in this patch, built on --sound-dbc: the
+SoundEntries.dbc and CreatureSoundData.dbc the client has before this patch (z40's). The weather
+patch, which loads later and carries SoundEntries.dbc too, is built on this patch's copy.
 
 --patch-z is the built model patch: its CreatureDisplayInfo and CreatureModelData rows are
 mirrored into the SQL, because the server checks creature displays against its own DBC stores.
@@ -147,6 +157,13 @@ LIBRARY_DISPLAYS = (200000, 399999)
 def library_look(p):
     return not p.get("retail_display") and LIBRARY_DISPLAYS[0] <= p["display"] <= LIBRARY_DISPLAYS[1]
 
+
+def retail_display(p):
+    """The retail creature display the row's model is: its own model's, or the library look's."""
+    if p.get("retail_display"):
+        return int(p["retail_display"])
+    return p["display"] - LIBRARY_DISPLAYS[0] if library_look(p) else 0
+
 # mod-transmog-plus's own tables (its data/sql/world): keep these the same. The module's SQL makes
 # them too, because the server applies every module's SQL in file name order and this file comes
 # before mod-transmog-plus's.
@@ -169,6 +186,7 @@ FORM_SPELLS_TABLE = """CREATE TABLE IF NOT EXISTS `mod_transmog_plus_form_spells
 
 SPELL_FIELDS = 234
 F_EFFECT_MISC, F_ICON, F_ACTIVE_ICON, F_NAME, F_DESCRIPTION = 110, 133, 134, 136, 170
+F_VISUAL = 131
 STRING_FIELDS = set(range(136, 152)) | set(range(153, 169)) | set(range(170, 186)) | set(range(187, 203))
 FLOAT_FIELDS = {47, 77, 78, 79, 101, 102, 103, 119, 120, 121, 216, 217, 218, 229, 230, 231}
 # Plain `int` columns of AC's spell_dbc; every other integer column is unsigned.
@@ -190,11 +208,9 @@ def read_dbc(path):
     return rows, strings, fields
 
 
-def write_dbc(path, rows, strings, fields, keep_order=False):
-    """Rows in id order, or with keep_order as given: the client reads Achievement.dbc in file
-    order (see series_breaks), so the achievement tables keep Blizzard's."""
-    if not keep_order:
-        rows = sorted(rows, key=lambda r: r[0])
+def write_dbc(path, rows, strings, fields):
+    """Rows in the order given, never re-sorted: the client reads some tables in file order
+    (Achievement.dbc, see series_breaks), and the other tools on the spell patch keep theirs."""
     with open(path, "wb") as f:
         f.write(struct.pack("<4s4I", b"WDBC", len(rows), fields, fields * 4, len(strings)))
         for r in rows:
@@ -225,12 +241,7 @@ def template(rows, row_id, what):
 
 
 def upsert(rows, row):
-    rows[:] = [r for r in rows if r[0] != row[0]]
-    rows.append(row)
-
-
-def replace_or_append(rows, row):
-    """Like upsert, but a row that is already there keeps its place in the file."""
+    """A row that is already there keeps its place in the file; a new one goes at the end."""
     at = next((i for i, r in enumerate(rows) if r[0] == row[0]), None)
     if at is None:
         rows.append(row)
@@ -533,7 +544,37 @@ def patch_w(files, pets, args, tmp):
     write_dbc(files[dbc("Item")], items, item_str, item_fields)
     write_dbc(files[dbc("ItemDisplayInfo")], displays, display_str, display_fields)
     write_dbc(files[dbc("SpellIcon")], icons, icon_str, icon_fields)
+    summon_sounds(files, pets, new_spells, args, tmp)
     return new_spells
+
+
+def summon_sounds(files, pets, new_spells, args, tmp):
+    """Every mount's summon sound: retail's for the mount that wears its look, or that creature's
+    aggro sound. Writes Spell.dbc, the SpellVisual tables and SoundEntries.dbc back."""
+    sys.path.insert(0, os.path.join(args.creatures, "tools"))
+    import fetch  # wow-mod-retail-creatures
+    from spell_sounds import BLOCKS, SpellSounds
+    sounds = SpellSounds(files, args.sound_dbc, args.cache, BLOCKS["pets"], tmp)
+    mounts = fetch.db2(args.cache, "Mount")
+    mount_of = {}
+    for r in sorted(fetch.db2_rows(args.cache, "MountXDisplay"), key=lambda r: int(r["ID"])):
+        mount_of.setdefault(r["CreatureDisplayInfoID"], r["MountID"])
+    spells = {s[0]: s for s in new_spells}
+    silent = []
+    for p in pets:
+        if p["kind"]["spell"] != KINDS["mount"]["spell"]:
+            continue
+        display = retail_display(p)
+        mount = mounts.get(mount_of.get(str(display), ""))
+        kits = sounds.cast_kits(mount["SourceSpellID"]) if mount else []
+        if not kits and display:
+            kits = sounds.creature_kits(display)
+        if not kits:
+            silent.append(p["name"])
+        spells[p["spell"]][F_VISUAL] = sounds.give(p["spell"], kits)
+    sounds.write()
+    if silent:
+        print("%d mounts summon without a sound (retail has none for them): %s" % (len(silent), ", ".join(silent)))
 
 
 def add_achievements(files, pets, args, tmp):
@@ -582,7 +623,7 @@ def add_achievements(files, pets, args, tmp):
         row[40] = ACHIEVEMENT_UI_ORDER + pets.index(p)
         row[42] = p["spell"]                             # SpellIcon: the spell's own icon
         row[59] = LANG_MASK_EMPTY                        # no reward text
-        replace_or_append(achievements, row)
+        upsert(achievements, row)
 
         row = [0] * CRITERIA_FIELDS
         row[0] = criterion
@@ -593,10 +634,10 @@ def add_achievements(files, pets, args, tmp):
         row[25] = LANG_MASK
         row[26] = CRITERIA_FLAG_HIDDEN
         row[30] = 1                                      # Ui_Order
-        replace_or_append(criteria, row)
+        upsert(criteria, row)
 
     for table, (table_rows, strings, fields) in tables.items():
-        write_dbc(files["DBFilesClient\\%s.dbc" % table], table_rows, strings, fields, keep_order=True)
+        write_dbc(files["DBFilesClient\\%s.dbc" % table], table_rows, strings, fields)
 
 
 # --- SQL ---------------------------------------------------------------------------------------
@@ -845,6 +886,10 @@ def main():
     ap.add_argument("--client", required=True, help="the base client folder (has Data/<locale>/)")
     ap.add_argument("--locale", default="enUS")
     ap.add_argument("--cache", required=True, help="download folder, shared with wow-mod-retail-creatures")
+    ap.add_argument("--creatures", default=os.path.join(HERE, "..", "..", "mod-retail-creatures"),
+                    help="wow-mod-retail-creatures checkout (for its spell sounds)")
+    ap.add_argument("--sound-dbc", required=True,
+                    help="folder with the SoundEntries.dbc and CreatureSoundData.dbc the client has before this patch (z40's)")
     ap.add_argument("--pets", default=os.path.join(HERE, "..", "data", "pets.tsv"))
     ap.add_argument("--vendors", default=os.path.join(HERE, "..", "data", "vendors.tsv"))
     ap.add_argument("--out", required=True, help="the new spell patch")
