@@ -213,6 +213,10 @@ neither and summon silently. The sounds are `SoundEntries.dbc` rows in the spell
 before that patch. A patch that loads later and carries `SoundEntries.dbc` too is built on the
 spell patch's copy.
 
+The creatures' own sounds come after this: wow-mod-retail-creatures' `tools/look_sounds.py` gives
+each model its retail sound set, so a build's copy of the stock template's sounds doesn't last. A
+rebuild of the model patch loses them: run that tool again and regenerate the SQL from the result.
+
 **3. The gear.**
 
 ```bash
